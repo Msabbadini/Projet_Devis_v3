@@ -12,4 +12,43 @@ try{
     die($e->getMessage());
 }
 
+// class connexionDB{
+//     private $host='localhost';
+//     private $charset='utf8';
+//     private $name='lionel';
+//     private $user= 'root';
+//     private $pass= '';
+//     private $connexion;
+// // Function qui construit notre connexion
+//     function __construct($host=null,$name=null,$user=null,$pass=null,$charset=null){
+//         if($host != null){
+//             $this->host = $host;
+//             $this->name = $name;
+//             $this->user = $user;
+//             $this->pass = $pass;
+//             $this->charset = $charset;
+//         }
+//         try{
+//             $this->connexion = new PDO('mysql:host='.$this->host.';dbname='.$this->name.';charset='.$this->charset,$this->user,$this->pass);
+//             $this->connexion -> setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+//         }catch(PDOExecption $e){
+//             die($e->getMessage());
+//         }
+//     }
+//     // Function qui sert a la selection 
+//     public function select($sql){
+//         $req = $this->connexion->prepare($sql);
+//         $req->execute();
+//         // $req->fetchAll();
+//         return $req;
+//     }
+// // Function qui sert a Insert update delete
+//     public function insert($sql,$data=array()){
+//         $req=$this->connexion->prepare($sql);
+//         $req->execute($data);
+//     }
+// }
+
+// $db= new connexionDB();
+
 ?>

@@ -1,7 +1,8 @@
+<!-- Fichier pour update les informations -->
 <?php
 require('./src/function.php');
 // Ajout Client Start
-
+$id=htmlspecialchars($_POST['id']);
 $nom=htmlspecialchars($_POST['nom']);
 $prenom=htmlspecialchars($_POST['prenom']);
 $genre=htmlspecialchars($_POST['genre']);
@@ -76,7 +77,7 @@ if($verifClientNom !=0 && $verifClientPrenom !=0){
 }
 
 if($ret['status'] == 'ok'){
-$ret['msg'] = "<span style='color:green'>Votre ajout client est bien pris en compte</span>";
+$ret['msg'] = "<span style='color:green'>Votre Modification client est bien prise en compte</span>";
 } else {
 $ret['msg'] = "<span style='color:red'>Corriger les erreurs pour pouvoir continuer</span>";
 }
@@ -86,14 +87,14 @@ echo json_encode($ret);// on converti le tableau au format JSON et on le renvoie
 if($ret['status'] == 'ok'){
 
     if($verifClientNom==0 && $verifClientPrenom==0){
-        requestDb($genre,$nom,$prenom,$adresse,$code_postal,$ville,$mail,$telFixe,$telPortalble,$info);
+        updateClient($genre,$nom,$prenom,$adresse,$code_postal,$ville,$mail,$telFixe,$telPortalble,$info,$id);
     }
     else if($verifClientNom==0 && $verifClientPrenom==1){
-        requestDb($genre,$nom,$prenom,$adresse,$code_postal,$ville,$mail,$telFixe,$telPortalble,$info);
+        updateClient($genre,$nom,$prenom,$adresse,$code_postal,$ville,$mail,$telFixe,$telPortalble,$info,$id);
     
     }
     else if($verifClientNom!=0 && $verifClientPrenom==0){
-        requestDb($genre,$nom,$prenom,$adresse,$code_postal,$ville,$mail,$telFixe,$telPortalble,$info);
+        updateClient($genre,$nom,$prenom,$adresse,$code_postal,$ville,$mail,$telFixe,$telPortalble,$info,$id);
     };
 }
 

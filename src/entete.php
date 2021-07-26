@@ -5,6 +5,7 @@
     }else{
         $titre="Gestion ETS Thibaud";
     }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
