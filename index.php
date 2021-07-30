@@ -9,15 +9,5 @@
 </section>
 
 
-<script>
-$(document).ready(function () {
-    // Menu START
-    $('.menu').click(function(){
-        var page = $(this).data('menu');
-        $('.page-content').load(page+'.php');
-     });
-    // MENU END
-            
-});
-</script>
+<script  src="src/ajax.js"></script>
 <?php include('src/pied_page.php')?>

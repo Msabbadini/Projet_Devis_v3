@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="./tailwind.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <script src="./src/jquery-3.6.0.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.2.2/dist/cdn.min.js"></script>
     <!-- <script src="js/prototype.js" type="text/javascript"></script>
     <script src="js/default.js" type='text/javascript'></script> -->
 </head>

@@ -21,7 +21,7 @@
   --page-header-bgColor-hover: #1d2636;
   --page-header-txtColor: #dde9f8;
   --page-header-headingColor: #7889a4;
-  --page-header-width: 220px;
+  --page-header-width: 200px;
   --page-content-bgColor: #f0f1f6;
   --page-content-txtColor: #171616;
   --page-content-blockColor: #fff;
@@ -221,7 +221,7 @@ body {
   left: var(--page-header-width);
   width: calc(100% - var(--page-header-width));
   min-height: 100vh;
-  padding: 30px;
+  padding: 10px;
   color: var(--page-content-txtColor);
   background: var(--page-content-bgColor);
 }

@@ -1,6 +1,6 @@
 <?php 
-include('src/function.php');
 include 'src/modal.php';
+// voir pour la pagination
 ?>
 
 <div class="-my-2 py-2 overflow-x-auto ">
@@ -21,7 +21,7 @@ include 'src/modal.php';
                         </div>
                     </div>
                     <div class='mt-10'>
-                        <div id="result_recherche"></div>
+                        <div id="result_recherche" class='flex justify-center flex-wrap'></div>
                     </div>
                 </div>
                 <div class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
@@ -38,8 +38,6 @@ include 'src/modal.php';
                             </tr>
                         </thead>
                         <tbody class="bg-white" id='client'>
-                            <?= requestClient()?>
-                               
                         </tbody>
                     </table>
                   <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">
@@ -54,111 +52,37 @@ include 'src/modal.php';
                 results
             </p>
         </div>
-        <div>
-            <nav class="relative z-0 inline-flex shadow-sm">
-                <div>
-                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" aria-label="Previous" v-on:click.prevent="changePage(pagination.current_page - 1)">
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                </div>
-                <div>
-                    <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
-                        1
-                    </a>
-                  <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
-                        2
-                    </a>
-                   <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
-                        3
-                    </a>
-                </div>
-                <div v-if="pagination.current_page < pagination.last_page">
-                    <a href="#" class="-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" aria-label="Next">
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                </div>
-            </nav>
+            <div>
+                <nav class="relative z-0 inline-flex shadow-sm">
+                    <div>
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" aria-label="Previous" v-on:click.prevent="changePage(pagination.current_page - 1)">
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
+                            1
+                        </a>
+                    <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
+                            2
+                        </a>
+                    <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
+                            3
+                        </a>
+                    </div>
+                    <div v-if="pagination.current_page < pagination.last_page">
+                        <a href="#" class="-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" aria-label="Next">
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+            <input type="hidden" id="totalPage" value=''>
         </div>
     </div>
-                </div>
-            </div>
-<script>
-
-$(document).ready(function () {
-//Barre de recherche Start
-    $('#search').keyup(function(){
-        $('#result_recherche').html('')
-
-        var client =  $(this).val()
-
-        if(client != ''){
-            $.ajax({
-                type: 'GET',
-                url: 'fonctions/recherche_client.php',
-                data: 'client='+ encodeURIComponent(client),
-                success:function(data){
-                    if(data !=''){
-                        $('#result_recherche').append(data)
-                        console.log(client)
-                    }else{
-                        document.getElementById('result_recherche').innerHTML += "<div class='text-red-600 text-center font-medium mt-10'> Aucun Client ne correspondant a votre recherche </div> ";
-                    }
-                }
-            })
-        }
-    });
-// Barre de recherche END
-// Function Delete START
-    $('.delete').click(function(){
-        var idClient = $(this).attr('id');
-        var info_client = $(this).data('client');
-        $.ajax({
-            type: 'POST',
-            url: 'src/delete.php',
-            data: {clientId:idClient},
-            success: function(data){
-                if(confirm('Êtes-vous sur de vouloir supprimer '+ info_client+' ?')){
-                    $('#'+idClient).remove();
-                }
-            }
-        })
-    });
-// Function Delete END
-// Function Update START
-
-    $('.update').click(function(){
-        var idClient = $(this).data('id')
-        $.ajax({
-            type: 'POST',
-            url: 'fonctions/modif.php',
-            data: {clientId:idClient},
-            success: function(data){
-                $('#modal_content').html(data);
-            }
-            
-        })
-})
-// Function Update END
-// Function Info Start
-    $('.info').click(function(){
-        var idClient = $(this).data('id')
-        $.ajax({
-            type: 'GET',
-            url: './info.php',
-            data: {clientId:idClient},
-            success:function(data){
-                // $('.page-content').load('info.php');
-                $('.page-content').html(data);
-
-
-            }
-        })
-    })
-// Function Info End
-
-});
-</script>
+</div>
+           

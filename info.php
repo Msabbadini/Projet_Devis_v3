@@ -14,14 +14,14 @@ $data = $req->fetchAll();
 
 ?>
 <div class="-my-2 py-2 overflow-x-auto ">
-      <div class="align-middle rounded-tl-lg rounded-tr-lg inline-block w-full py-4 overflow-hidden bg-white shadow-lg px-12">
+      <div id='info_client' class="align-middle rounded-tl-lg rounded-tr-lg inline-block w-full py-4 overflow-hidden bg-white shadow-lg px-12">
           <?php
           $req2 = $db -> prepare('SELECT * FROM clients WHERE id_client= ?');
           $req2 -> execute([$id]);
           $client= $req2-> fetchAll();
           foreach($client as $d){
           ?>
-        <h3 class="text-lg font-medium leading-6 text-gray-900"><span class='text-indigo-600 font-bold'>Fiche Client :</span>  <?=$d['civilite_client'].' '. $d['nom_client'].' '.$d['prenom_client'] ?></h3>
+        <h1 class="text-lg font-medium leading-6 text-gray-900"><span class='text-indigo-600 font-bold'>Fiche Client :</span>  <?=$d['civilite_client'].' '. $d['nom_client'].' '.$d['prenom_client'] ?></h1>
         <div class="flex flex-wrap">
 
             <p class="m-5  text-md text-gray-600">
@@ -43,7 +43,7 @@ $data = $req->fetchAll();
                 <span class="text-indigo-600 font-bold">Adresse Client : </span>
                 <?= $d['adresse_postal'].' , '.$d['code_postal'].' '.$d['ville_client'] ?>
             </p>
-            <button id='<?= $r['id_client']?>' class="delete px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-500 hover:text-white focus:outline-none">Impression Fiche Client </button>
+            <button data-id_client="<?= $d['id_client']?>" class="print_client px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-indigo-500 hover:text-white focus:outline-none" type='button'>Impression Fiche Client </button>
         </div>
         <?php
           }
@@ -135,8 +135,8 @@ $data = $req->fetchAll();
     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5"><?= $r['date_creation'] ?></td>
     <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
         <button data-id='<?= $r['id_client'] ?>' class="info px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-indigo-500 hover:text-white focus:outline-none">Details </button>
-        <button data-id='<?= $r['id_client'] ?>' class="info px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-yellow-500 hover:text-white focus:outline-none">Modification </button>
-        <button class="update px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-green-500 hover:text-white focus:outline-none ease-liner " data-role='update' data-id='<?= $r['devis_num'] ?>' type='button' >Impression </button>
+        <button data-id='<?= $r['id_client'] ?>' data-id_devis='<?= $r['devis_num']?>' class="print px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-yellow-500 hover:text-white focus:outline-none" Type='button'>Impression </button>
+        <button class="update px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-green-500 hover:text-white focus:outline-none ease-liner " data-role='update' data-id='<?= $r['devis_num'] ?>' type='button' >Modification </button>
         <button id='<?= $r['id_client']?>' class="delete px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-red-600 hover:text-white focus:outline-none">Suppression </button>
     </td>
     </tr>
@@ -190,34 +190,3 @@ $data = $req->fetchAll();
     </div>
                 </div>
             </div>
-<script>
-
-$(document).ready(function () {
-//Barre de recherche Start
-    $('#search').keyup(function(){
-        $('#result_recherche').html('')
-
-        var client =  $(this).val()
-
-        if(client != ''){
-            $.ajax({
-                type: 'GET',
-                url: 'fonctions/recherche_client.php',
-                data: 'client='+ encodeURIComponent(client),
-                success:function(data){
-                    if(data !=''){
-                        $('#result_recherche').append(data)
-                        console.log(client)
-                    }else{
-                        document.getElementById('result_recherche').innerHTML += "<div class='text-red-600 text-center font-medium mt-10'> Aucun Client ne correspondant a votre recherche </div> ";
-                    }
-                }
-            })
-        }
-    });
-// Barre de recherche END
-// 
-
-	
-});
-</script>

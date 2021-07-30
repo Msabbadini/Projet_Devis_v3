@@ -1,5 +1,5 @@
 
-<div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="modal-id">
+<div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="modal_id">
   <div class="relative w-9/12 h-9/12 my-6 mx-auto max-w-3xl">
     <!--content-->
     <div class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -20,7 +20,7 @@
       </div>
       <!--footer-->
       <div class="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-        <button class=" text-white bg-indigo-600 hover:bg-red-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"  type="button" onclick="toggleModal('modal-id')">
+        <button data-modal='modal_id' class="close text-white bg-indigo-600 hover:bg-red-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"  type="button">
           Fermer
         </button>
         <button id='modif' class=" text-white bg-indigo-600 hover:bg-green-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="submit" >
@@ -30,13 +30,8 @@
     </div>
   </div>
 </div>
-<div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-id-backdrop"></div>
+<div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal_id_backdrop"></div>
 <script type="text/javascript">
-  function toggleModal(modalID){
-    document.getElementById(modalID).classList.toggle("hidden");
-    document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
-    document.getElementById(modalID).classList.toggle("flex");
-    document.getElementById(modalID + "-backdrop").classList.toggle("flex");
-  }
+
   
 </script>
