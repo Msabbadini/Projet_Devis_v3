@@ -2,10 +2,10 @@
 <div>
   <div class="md:grid md:grid-cols-3 md:gap-6">
     <div class="md:col-span-1">
-      <div class="px-4 sm:px-0">
+      <div class="px-2 sm:px-0">
         <form id='ajout_client'>
         <div class="shadow overflow-hidden sm:rounded-md">
-          <div class="px-4 py-5 bg-gray-200 sm:p-6">
+          <div class="px-2 py-5 bg-gray-200 sm:p-6">
               <h1 class='text-indigo-500 text-center font-bold'>Informations Client</h1>
             <div class="grid grid-cols-6 gap-6">
             <div class="col-span-6 mt-3">
@@ -31,110 +31,74 @@
                   </div> -->
               </div>
               <div class="col-span-6" id="result_recherche_devis"></div>
-              <div class="col-span-6 sm:col-span-3">
-                <label class="block text-sm font-medium text-gray-700">Nom Client</label>
-                <span id="nom-error" class="error text-indigo-500"></span>
-                <input type="text" name="nom"  autocomplete="Nom du client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
+              <div class='col-span-6'id="result_search">
 
-              <div class="col-span-6 sm:col-span-3">
-                <label for="last_name" class="block text-sm font-medium text-gray-700">Prenom client</label>
-                <span id="prenom-error" class="error text-indigo-500"></span>
-                <input type="text" name="prenom" autocomplete="Prénom du client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
               </div>
-
-              <div class="col-span-6 sm:col-span-4">
-                <label  class="block text-sm font-medium text-gray-700">Adresse Email</label>
-                <span id="email-error" class="error text-indigo-500"></span>
-                <input type="mail" name="email"  autocomplete="email client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-
-              <div class="col-span-6">
-                <label  class="block text-sm font-medium text-gray-700">Adresse Postal</label>
-                <span id="adresse-error" class="error text-indigo-500"></span>
-                <input type="text" name="adresse_postal"  autocomplete="Adresse postal client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-
-              <div class="col-span-3">
-                <label  class="block text-sm font-medium text-gray-700">Code Postal</label>
-                <span id="code_postal-error" class="error text-indigo-500"></span>
-                <input type="number" name="code_postal"  autocomplete="Code postal" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-
-              <div class="col-span-3">
-                <label  class="block text-sm font-medium text-gray-700">Ville</label>
-        <span id="ville-error" class="error text-indigo-500"></span>
-                <input type="text" name="ville" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-
-              <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-                <label class="block text-sm font-medium text-gray-700">Téléphone Fixe</label>
-                <span id="tel-error" class="error text-indigo-500"></span>
-                <input type="text" name="telephone_fixe" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-
-              <div class="col-span-6 sm:col-span-3 lg:col-span-3">
-                <label for="postal_code" class="block text-sm font-medium text-gray-700">Téléphone Portable</label>
-                <span id="telephone_portable-error" class="error text-indigo-500"></span>
-
-                <input type="text" name="telephone_portable"  autocomplete="Téléphone Portable" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
+              
             </div>
             <div class=" mt-4 border-t-4 border-indigo-500 col-span-12"></div>
             <h1 class=' m-3 text-indigo-500 text-center font-bold'>Informations Références Devis</h1>
 
             <div class="grid grid-cols-6 gap-6">
             <div class="col-span-6 sm:col-span-6">
-            <select  name="genre" autocomplete="civilité" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm">
-                  <option value="">Choisir référence</option>
-                  <option value="Monsieur">Monsieur</option>
-                  <option value='Madame'>Madame</option>
-
+            <select id='select_ref'   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm">
+                  
                 </select>
               </div>
               <div class="col-span-2">
-                                  <label class="block text-sm font-medium text-gray-700"> m² Toiture</label>
-                <span id="nom-error" class="error text-indigo-500"></span>
-                <input type="text" name="nom"  autocomplete="Nom du client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                <label class="block text-sm font-medium text-gray-700"> m² Toiture</label>
+                <input type="number" id='metrage_toiture' name="metrage_toiture"  autocomplete="Metrage toiture client" class="mt-1 pl-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
 
               </div>
               <div class="col-span-6 sm:col-span-6">
+                <input type="hidden" name="id_ref" id='ref_id_ref'>
                 <label class="block text-sm font-medium text-gray-700">Désignation référence</label>
-                <span id="nom-error" class="error text-indigo-500"></span>
-                <input type="text" name="nom"  autocomplete="Nom du client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                <textarea name="designation_ref" id="ref_designation" cols='60' rows="3" readonly class='resize-none mt-1 pl-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md '></textarea>
               </div>
 
               <div class="col-span-6 sm:col-span-2">
-                <label for="last_name" class="block text-sm font-medium text-gray-700">Quantité</label>
-                <span id="prenom-error" class="error text-indigo-500"></span>
-                <input type="text" name="prenom" autocomplete="Prénom du client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                <label for="last_name" class="block text-sm font-medium text-gray-700">QTE Fournisseur</label>
+                <input type="text" id='ref_qte' name="quantite_ref" autocomplete="Quantite" class="mt-1 pl-2 bg-indigo-500 text-white font-bold focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
               </div>
 
               <div class="col-span-6 sm:col-span-2">
-                <label  class="block text-sm font-medium text-gray-700">Metrage</label>
-                <span id="email-error" class="error text-indigo-500"></span>
-                <input type="mail" name="email"  autocomplete="email client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                <label  class="block text-sm font-medium text-gray-700">Prix HT Fournisseur</label>
+                <input type="text" id='ref_prix_fournisseur' name="prix_fournisseur"  autocomplete="" class="mt-1 pl-2 bg-indigo-500 text-white font-bold focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                
+              </div>
+              <div class="col-span-6 sm:col-span-2">
+                <label  class="block text-sm font-medium text-gray-700">Ref Fournisseur</label>
+                <input type="text" id='ref_ref_fournisseur' name="ref_fournisseur"  autocomplete="" class="mt-1 pl-2 bg-indigo-500 text-white font-bold focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                
               </div>
 
               <div class="col-span-2">
-                <label  class="block text-sm font-medium text-gray-700">Prix HT</label>
-                <span id="adresse-error" class="error text-indigo-500"></span>
-                <input type="text" name="adresse_postal"  autocomplete="Adresse postal client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                <label  class="block text-sm font-medium text-gray-700">QTE/m²</label>
+                <input type="text" id='ref_metrage' name="ref_prix_fournisseur"  autocomplete="Adresse postal client" class="mt-1 pl-2 bg-purple-500 text-white font-bold focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+              </div>
+
+              <div class="col-span-3">
+                <label  class="block text-sm font-medium text-gray-700">Prix HT/M²</label>
+                <input type="text" id='ref_prix_m2' name="ref_prix_m2"  autocomplete="Adresse postal client" class="mt-1 pl-2 bg-purple-500 text-white font-bold focus:ring-red-500 focus:border-red-500 block w-full  shadow-sm sm:text-sm border-gray-300 rounded-md">
               </div>
 
               <div class="col-span-3">
                 <label  class="block text-sm font-medium text-indigo-700">Quantité Commandée</label>
-                <span id="adresse-error" class="error text-indigo-500"></span>
-                <input type="text" name="adresse_postal"  autocomplete="Adresse postal client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                <input type="number" id='ref_qte_commande' name="quantite_commande"  autocomplete="Adresse postal client" class="mt-1 pl-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+              </div>
+              <div class="col-span-3">
+                <label  class="block text-sm font-medium text-indigo-700">Prix HT Commande</label>
+                <input type="number" id='ref_prix_commande' name="quantite_commande"  autocomplete="Adresse postal client" class="mt-1 pl-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
               </div>
 
             </div>
           </div>
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <button type="submit" id='ajout_client_btn' class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            <input type="hidden" name="id_article" id='ref_id'>
+            <button type="button" id='ajout_ref_btn' class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
               Ajouter
             </button>
-            <button type="submit" id='ajout_client_btn' class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            <button type="submit" id='valide_ref_btn' class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
               Validation Devis
             </button>
           </div>
@@ -146,11 +110,28 @@
       <form id='ajout_client'>
         <div class="shadow overflow-hidden sm:rounded-md">
           <div  class="px-4 py-3 bg-gray-50 text-left sm:px-6">
-            <h4 class="total_commande text-indigo-500 text-lg font-semibold">Total Commande : </h4>
+            <input type="hidden" name="id_client" value='' id='id_client'>
+            <label class="total_commande text-indigo-500 text-lg font-semibold col-span-2">Total Commande : </label>
+            <input type='text' id="total_commande" class='bg-indigo-500 text-white font-bold rounded-md pl-3' value='00' readonly>
+            <button type="submit" id='valide_ref_btn' class="inline-flex justify-end py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+              Validation Devis
+            </button>          
           </div>
           <div class="px-4 py-5 bg-gray-200 sm:p-6">
-            <div class="contenu_devis grid grid-cols-6 gap-6">
+            <div class=" grid grid-cols-6 gap-6">
+            <table class='table-auto col-span-6 text-left'>
+              <thead>
+                <tr>
+                  <th>N° Référence</th>
+                  <th>Designation Ref</th>
+                  <th>Qte Fournisseur</th>
+                  <th>Prix Total Ht </th>
+                </tr>
+              </thead>
+              <tbody id='contenu_devis' >
 
+              </tbody>
+            </table>
         </div>
       </form>
     </div>

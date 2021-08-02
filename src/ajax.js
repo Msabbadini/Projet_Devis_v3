@@ -1,3 +1,4 @@
+
 // ******* Modal Start   *******
       function toggleModal(modalID){
         $('#'+modalID).toggleClass("hidden");
@@ -228,6 +229,94 @@ $(document).ready(function(){
         // 
         $(document).on('click','.result_client',function(){
             var id_client = $(this).data('client')
-            alert(id_client)
+            $.ajax({
+                type: 'POST',
+                url: 'fonctions/devis_client.php',
+                data:{id_client:id_client},
+                success: function(data){
+                    $('#result_search').html(data)
+                    $('#result_recherche_devis').html('')
+                }
+            });
         });
+
+//  ************************************  Devis ************************************
+             // ******** Function Insert Tableau Devis Toiture Start *******
+                   // """[Insert Client Devis Toiture]
+
+        // Arguments:
+        //     click ([evenement]): Pour chaque click dans la zone prédéfini
+        //     '#ajout_devis' (class div): on indique sur quelle élément avec cette id on doit faire l'évènement
+        //      data:
+        //          info-> Récupération de la désignation de référence 
+        //          quantite-> récupération de la quantite
+        //          mesure-> recuperation de l'unite de mesure lié a la référence
+        //          puht-> recuperation du prix ht
+                
+    
+        // Détails:
+        //     TypeError: [description]
+    
+        // Retours:
+        //     [type]: [description]
+             $(document).on('click','#ajout_ref_btn',function(){
+                var id_client = $(this).data('client_id')
+                var id_article = $('#ref_id_ref').val()
+                var ref_qte_commande = $('#ref_qte_commande').val()
+                var ref_designation = $('#ref_designation').val()
+                var ref_prix_commande = $('#ref_prix_commande').val()
+                $('#contenu_devis').append("<tr data-id_client='"+id_client+"'><td>"+id_article+"</td> <td>"+ref_designation+"</td><td class='text-indigo-600 font-bold'>"+ref_qte_commande+"</td><td class='text-indigo-600 font-bold'>"+ref_prix_commande+"</td><td><button type='button' id='remove_row' class='bg-indigo-500 text-white w-16 rounded-md'>X</button></td></tr>")
+                // $('#id_client').val(id_client)
+             });
+             // ******** Function Insert Tableau Devis Toiture End   *******
+             // ******** Function Remove Ligne Tableau Devis Toiture Start   *******
+             $(document).on('click','#remove_row',function(){
+                $(this).closest('tr').remove()
+             });
+             // ******** Function Remove Ligne Tableau Devis Toiture End     *******
+             // ******** Function Select Tableau Devis Toiture Start  *******
+             $(document).on('click','#select_ref',function(){
+                 $('#select_ref').prop('selectIndex',0)
+                $.ajax({
+                    type: 'POST',
+                    url: './vrac.php',
+                    data: {action:'liste',categorie:'devis',select:'all'},
+                    success: function(data){
+                        // console.log(data)
+                        $('#select_ref').html(data)
+                    }
+                });
+             });
+             // ******** Function Select Tableau Devis Toiture End  *******
+             // ******** Function Select choix Tableau Devis Toiture Start  *******
+             $(document).on('change','#select_ref',function(){
+                var choix =$(this).val()
+                var met_toiture= $('#metrage_toiture').val()
+                $.ajax({
+                    type: 'POST',
+                    url: './vrac.php',
+                    data:{action:'chercher',categorie:'devis',id_ref:choix},
+                    datatype: 'JSON',
+                    success: function(data){
+                        data = jQuery.parseJSON(data)
+                        console.log(data)
+                        for(var prop in data.ref){
+                            $('#ref_'+prop).val(data.ref[prop]);
+                        }
+                        // voir pour un switch case avec les ids ou faire une colonne dans BDD pour différencier
+                        var quantite_commande = parseInt(data.ref['quantite_m2'])*met_toiture/data.ref['qte']
+                        var quantite_commande = Math.round(quantite_commande)
+                        var prix_commande = quantite_commande * data.ref['prix_fournisseur']
+                        console.log(data.ref['quantite_m2'])
+                        console.log(data.ref['prix_fournisseur'])
+                        console.log(quantite_commande)
+                        $('#ref_qte_commande').val(quantite_commande)
+                        $('#ref_prix_commande').val(prix_commande)
+                    }
+                })
+             });
+             // ******** Function Select choix Tableau Devis Toiture End    *******
+             
+
+
 })

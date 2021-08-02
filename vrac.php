@@ -1,5 +1,6 @@
 <?php
 require_once './modeles/client.class.php';
+require_once './modeles/devis.class.php';
     if(isset($_POST['action']) && !empty($_POST['action']) && isset($_POST['categorie']) && !empty($_POST['categorie'])){
         // Pas d'accolade car j'ai un seul élément  pour la condition 
         if($_POST['categorie'] == 'clients') $obj = new Client();
