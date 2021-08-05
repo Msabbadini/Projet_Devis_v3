@@ -3,30 +3,27 @@
  require_once 'pagination.class.php';
 // require 'Helpers/helper.php';
  class Client extends DB{
+    function __construct(){
+        parent::__construct();
+    }
      // *********** FUNCTION POUR LES VERIFS START ***********
      private function verifClientNom($nom){
-        if($nom != " "){
-            // $req =$db->select('SELECT count(*) as numberNomClient FROm clients WHERE nom_client=?',$nom);
+        if(!empty($nom) && $nom != " "){
             $req=$this->getDatabase()->prepare('SELECT count(*) as numberNomClient FROM clients WHERE nom_client=?');
             $req->execute(array($nom));
-            $nbNom=0;
-            while($nom_verif=$req->fetch()){
-                $nbNom=$nom_verif['numberNomClient'];
-            }
-            return $nom=$nbNom;    
+            $nom_verif=$req->fetch();
+            if($nom_verif && isset($nom_verif['numberNomClient'])) return $nom_verif['numberNomClient']; 
         }
     }
     
     private function verifClientPrenom($prenom){
         // $req2=$db->select('SELECT count(*) as numberNomClient FROm clients WHERE prenom_client=?',$prenom);
-        if($prenom != ''){
+        if(!empty($prenom) && $prenom != ''){
             $req2=$this->getDatabase()->prepare('SELECT count(*) as numberPrenomClient FROM clients WHERE prenom_client=?');
             $req2->execute(array($prenom));
-            $nbPrenom=0;
-            while($prenom_verif=$req2->fetch()){
-                $nbPrenom=$prenom_verif['numberPrenomClient'];
-            }
-            return $prenom=$nbPrenom;
+            $prenom_verif = $req2->fetch();
+            if($prenom_verif && isset($prenom_verif['numberPrenomClient'])) return $prenom_verif['numberPrenomClient']; 
+
         }
     }
     
@@ -147,52 +144,8 @@
         // $offset = ($_POST['page']-1)*$limit;
         $result= $this->getDatabase()->prepare('SELECT * FROM '.$this->table_client );
         $result->execute();
-        $result =$result->fetchAll();
-        // ob_start(); // démarrage le zone tampon
-        // include 'src/liste.php';    // echo via include de mon tableau liste client php
-        // $tab['html'] = ob_get_contents();  // j'insere le contenu dans une variable
-        // ob_end_flush(); // et je libere la mémoire
-        foreach($result as $r){
-            // print_r($r);
-            ?>
-            <tr id='<?= $r['id_client'] ?>'>
-        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-            <div class="flex items-center">
-                <div>
-                    <div class="text-sm leading-5 text-gray-800"><?= $r['id_client'] ?></div>
-                </div>
-            </div>
-        </td>
-        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-            <div  class="text-sm leading-5 text-blue-900"><?= $r['civilite_client'].' '.$r['nom_client'].' '.$r['prenom_client'] ?></div>
-        </td>
-        <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5"><?= $r['email_client']; ?></td>
-        <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5"><?php
-        if(empty($r['telephone_fixe_client'])){
-            echo $r['telephone_portable_client'];
-        }elseif(empty($r['telephone_portable_client'])){
-            echo $r['telephone_fixe_client'];
-        }else{
-            echo $r['telephone_fixe_client'].' / '.$r['telephone_portable_client'];
-        }
-        ?></td>
-        <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5 cursor-pointer">
-            <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-            <span aria-hidden class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-            <span id='fiche_client' class="relative text-xs" data-client='<?= $r['id_client']?>'>Impression</span>
-        </span>
-        </td>
-        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5"><?= $r['date_creation'] ;?></td>
-        <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
-            <button data-id='<?= $r['id_client'] ;?>' class="info px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-indigo-700 hover:text-white focus:outline-none">Fiche Client</button>
-            <button class="update px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-green-500 hover:text-white focus:outline-none ease-liner " data-modal='modal_id' data-id='<?= $r['id_client']; ?>' type='button' >Modification</button>
-            <button id='<?= $r['id_client'];?>' data-client='<?= $r['nom_client']." ".$r['prenom_client'] ?>' class="delete px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-red-600 hover:text-white focus:outline-none">Suppression</button>
-        </td>
-        </tr>
-            <?php
-        } 
-    
-        // echo json_encode($result);
+        $data =$result->fetchAll();
+        return $data;
     }
     //*************************  FUNCTION LISTE CLIENT END      **************************
 
@@ -271,10 +224,10 @@
     //*************************  FUNCTION MODIFIER CLIENT END   **************************
     
     //*************************  FUNCTION DELETE CLIENT START   **************************
-        function Delete(){         
+        function Supprimer(){         
             if(isset($_POST['clientId'])){
-                $clientId = htmlspecialchars($_POST['clientId']);
-                $req = $db->prepare('DELETE FROM clients WHERE id_client= ?');
+                $clientId = $_POST['clientId'];
+                $req = $db->prepare('DELETE FROM '.$this->table_client.' WHERE id_client= ?');
                 $req->execute($clientId);
         
                 if($req){
@@ -285,8 +238,21 @@
             }
         }
     //*************************  FUNCTION DELETE CLIENT END     **************************
+    //*************************  FUNCTION CHERCHER CLIENT START     **************************
+    function Chercher(){
+        if(isset($_POST['client'])){
+        $client = trim($_POST['client']);
+        // $req =$db -> select('SELECT * from clients where nom_client LIKE ? LIMIT 10', array("$client%"));
+        $req = $this->getDatabase()->prepare('SELECT * FROM '.$this->table_client.' WHERE nom_client LIKE ? LIMIT 10');
+        $req -> execute(array("$client%"));
+        $data = $req->fetchAll();
+        return  $data;
+        }
+        return false;
+    }
+    //*************************  FUNCTION CHERCHER CLIENT END       **************************
 
 };
 // ************************************************************ FUNCTION CRUD END ***********************************************************
-
+$Clients = new Client();
 ?>

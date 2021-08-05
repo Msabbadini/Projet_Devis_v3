@@ -42,7 +42,7 @@ abstract class DB{
             }
 
             return self::$database;
-        }
+    }
     
 }
 

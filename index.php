@@ -1,6 +1,4 @@
 <?php
-    include('./src/connexion.php');
-    include('./src/function.php');
     include('./src/entete.php');
     include("src/header.php");
 ?>

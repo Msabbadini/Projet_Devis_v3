@@ -25,7 +25,7 @@
       <li class='hover:text-red-600 hover:bg-blue-100 rounded menu'>
           <span>Velux</span>
       </li>
-      <li class='hover:text-red-600 hover:bg-blue-100 rounded menu'>
+      <li data-menu='liste_devis' class='hover:text-red-600 hover:bg-blue-100 rounded menu'>
           <span>Liste Devis</span>
       </li>
 
@@ -33,7 +33,7 @@
       <li class="menu-heading">
         <h3>Références</h3>
       </li>
-      <li class='hover:text-red-600 hover:bg-blue-100 rounded menu'>
+      <li data-menu='liste_reference' class='hover:text-red-600 hover:bg-blue-100 rounded menu'>
           <span>Références devis</span>
       </li>
       <li class='hover:text-red-600 hover:bg-blue-100 rounded menu'>

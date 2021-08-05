@@ -1,4 +1,5 @@
-
+var adresse = 'http://localhost/testV4/src/fiche_client.php?client='
+var ajax = 'controller/vrac.php'
 // ******* Modal Start   *******
       function toggleModal(modalID){
         $('#'+modalID).toggleClass("hidden");
@@ -7,6 +8,23 @@
         $('#'+modalID + "_backdrop").toggleClass("flex");
       };
       
+      function displayRecords(numRecords, pageNum ) {
+        $.ajax({
+            type: "POST",
+            url: "./vrac.php",
+            data: {action:'liste',categorie:'devis',show:numRecords,pageNum:pageNum},
+            cache: false,
+            beforeSend: function () { 
+                $('.loader').html('<img src="loader.gif" alt="" width="24" height="24" >');
+            },
+            success: function(html) {    
+                $("#results").html( html );
+                $('.loader').html('');
+                console.log(html.ref)
+            }
+        });
+    }
+
 
 // ******* Modal End     *******
 $(document).ready(function(){
@@ -15,33 +33,33 @@ $(document).ready(function(){
     // ******* Menu Start *******
         $(document).on('click','.menu',function(){
             var page = $(this).data('menu')
-            $('.page-content').load(page+'.php',function(){
-                if(page =='liste_client'){
-                    let action = 'liste'
-                    let cat = 'clients'
-                    $.ajax({
-                        type: 'POST',
-                        url: './vrac.php',
-                        data: {
-                            action:action,
-                            categorie:cat
-                        },
-                        datatype: 'html',
-                        success: function(data){
-                            console.log(data)
-                            $('#client').html(data);
-                        }
-                    })
+            $('.page-content').load('views/'+page+'.php',function(){
+                switch (page) {
+                    case 'liste_client':
+                        let action = 'liste'
+                        let cat = 'clients'
+                        $.ajax({
+                            type: 'POST',
+                            url: ajax,
+                            data: {
+                                action:action,
+                                categorie:cat
+                            },
+                            datatype: 'html',
+                            success: function(data){
+                                // console.log(data)
+                                // $('#client').html(data);
+                            }
+                        });
+                        break;
+                    case 'liste_devis':
+                        displayRecords(10, 1);
+                        break;
+                
+                    default:
+                        break;
                 }
-                // elseif(page =='liste_devis'){
-                //     let action ='liste'
-                //     let cat = 'devis'
 
-                //     $.ajax({
-                //         type: 'POST',
-                //         url: 
-                //     })
-                // }
             });   
         });
     // ******* Menu End   *******
@@ -52,22 +70,38 @@ $(document).ready(function(){
        });
 //  ******************  Client ******************
     // ******* Pagination tableau CLient Start *******
- 
+    $(document).on('click', '.displayRecords',function(){
+        var numRecords = $(this).data('pagelimit')
+        var pageNum = $(this).data('pagenum')
+        console.log(numRecords)
+        console.log(pageNum)
+        $.ajax({
+            type: "POST",
+            url: ajax,
+            data: {action:'liste',categorie:'devis',show:numRecords,pageNum:pageNum},
+            cache: false,
+            beforeSend: function () { 
+                $('.loader').html('<img src="src/Infinity-loading.gif" alt="" width="24" height="24" >');
+            },
+            success: function(html) {    
+                $("#results").html( html );
+                $('.loader').html('');
+            }
+        })
+    });
     // ******* Pagination tableau Client End   *******
     // ******* Barre de recherche *******
     $(document).on('keyup','#search',function(){
         $('#result_recherche').html('')
-
         var client = $(this).val()
         if(client != ''){
             $.ajax({
-                type: 'GET',
-                url: 'fonctions/recherche_client.php',
-                data: 'client='+encodeURIComponent(client),
+                type: 'POST',
+                url: ajax,
+                data: {action:'chercher',categorie:'clients',client:client},
                 success:function(data){
                     if(data !=''){
-                        $('#result_recherche').append(data)
-                        console.log(client)
+                        console.log(data)
                     }else{
                         $('#result_recherche').innerHTML += "<div class='text-red-600 text-center font-medium mt-10'> Aucun Client ne correspondant a votre recherche </div> "
                     }
@@ -82,7 +116,7 @@ $(document).ready(function(){
             var info_client = $(this).data('client')
             $.ajax({
                 type: 'POST',
-                url: './vrac.php',
+                url: ajax,
                 data: {clientId:idClient,action:'supprimer',categorie:'clients'},
                 success: function(data){
                     if(confirm('Êtes-vous sur de vouloir supprimer '+info_client+' ?')){
@@ -112,7 +146,7 @@ $(document).ready(function(){
             var idClient = $(this).data('id')
             $.ajax({
                 type: 'POST',
-                url: './vrac.php',
+                url: ajax,
                 data: {clientId:idClient,action:'listeClient',categorie:'clients'},
                 success:function(data){
                 $('#client').html(data.devis),
@@ -126,7 +160,7 @@ $(document).ready(function(){
         // $('#ajout_client_btn').submit(function(e){            
             e.preventDefault();
             $.ajax({
-                url: "./vrac.php",
+                url: ajax,
                 data: $('#ajout_client').serialize(),
                 type: 'POST',
                 datatype: 'JSON',
@@ -165,12 +199,12 @@ $(document).ready(function(){
     // ******* Function Impression Fiche Client Start       *******
         $(document).on('click','.print_client',function(){
             var client = $(this).data('id_client')
-            window.open('http://localhost/testV4/src/fiche_client.php?client='+client)
+            window.open(adresse+client)
         });
+        
         $(document).on('click','#fiche_client',function(){
             var client= $(this).data('client')
-            window.open('http://localhost/testV4/src/fiche_client.php?client='+client)
-
+            window.open(adresse+client)
         });
     // ******* Function Impression Fiche Client End         *******
     // ******* Function Impression Fiche Devis Start       *******
@@ -264,37 +298,34 @@ $(document).ready(function(){
                 var id_article = $('#ref_id_ref').val()
                 var ref_qte_commande = $('#ref_qte_commande').val()
                 var ref_designation = $('#ref_designation').val()
-                var ref_prix_commande = $('#ref_prix_commande').val()
-                $('#contenu_devis').append("<tr data-id_client='"+id_client+"'><td>"+id_article+"</td> <td>"+ref_designation+"</td><td class='text-indigo-600 font-bold'>"+ref_qte_commande+"</td><td class='text-indigo-600 font-bold'>"+ref_prix_commande+"</td><td><button type='button' id='remove_row' class='bg-indigo-500 text-white w-16 rounded-md'>X</button></td></tr>")
+                var ref_prix_commande = parseFloat($('#ref_prix_commande').val())
+                $('#contenu_devis').append("<tr data-id_client='"+id_client+"'><td>"+id_article+"</td> <td>"+ref_designation+"</td><td class='text-indigo-600 font-bold'>"+ref_qte_commande+"</td><td class=' ref_prix_commande text-indigo-600 font-bold'>"+ref_prix_commande+"</td><td><button type='button' data-refcommande="+ref_prix_commande+"   class='bg-indigo-500 text-white w-16 rounded-md remove_row'>X</button></td></tr>")
                 // $('#id_client').val(id_client)
+                var total = parseFloat($('#total_commande').val())
+                total += ref_prix_commande
+                $('#total_commande').val(total.toFixed(2))
+                console.log(total)
              });
              // ******** Function Insert Tableau Devis Toiture End   *******
              // ******** Function Remove Ligne Tableau Devis Toiture Start   *******
-             $(document).on('click','#remove_row',function(){
+             $(document).on('click','.remove_row',function(){
+                var montant = $(this).data('refcommande')
+                var total = parseFloat($('#total_commande').val())
+                total -= montant
+                console.log('prix'+$(this).data('refcommande'))
+                console.log(typeof montant +' ref_commande')
+                console.log(typeof total +' '+total)
+                $('#total_commande').val(total.toFixed(2))
                 $(this).closest('tr').remove()
              });
              // ******** Function Remove Ligne Tableau Devis Toiture End     *******
-             // ******** Function Select Tableau Devis Toiture Start  *******
-             $(document).on('click','#select_ref',function(){
-                 $('#select_ref').prop('selectIndex',0)
-                $.ajax({
-                    type: 'POST',
-                    url: './vrac.php',
-                    data: {action:'liste',categorie:'devis',select:'all'},
-                    success: function(data){
-                        // console.log(data)
-                        $('#select_ref').html(data)
-                    }
-                });
-             });
-             // ******** Function Select Tableau Devis Toiture End  *******
              // ******** Function Select choix Tableau Devis Toiture Start  *******
              $(document).on('change','#select_ref',function(){
                 var choix =$(this).val()
                 var met_toiture= $('#metrage_toiture').val()
                 $.ajax({
                     type: 'POST',
-                    url: './vrac.php',
+                    url: ajax,
                     data:{action:'chercher',categorie:'devis',id_ref:choix},
                     datatype: 'JSON',
                     success: function(data){
@@ -316,7 +347,12 @@ $(document).ready(function(){
                 })
              });
              // ******** Function Select choix Tableau Devis Toiture End    *******
-             
+             // ******** Function Pagination Liste Devis Start    *******
 
+             // ******** Function Pagination Liste Devis End      *******
+             
+//  ************************************  References ************************************
+            //  Modal modification
+            $(document).on('click',)
 
 })
