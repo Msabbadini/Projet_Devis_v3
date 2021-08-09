@@ -1,3 +1,4 @@
+
 var adresse = 'http://localhost/testV4/src/fiche_client.php?client='
 var ajax = 'controller/vrac.php'
 // ******* Modal Start   *******
@@ -97,11 +98,11 @@ $(document).ready(function(){
         if(client != ''){
             $.ajax({
                 type: 'POST',
-                url: ajax,
+                url: 'views/recherche_client.php',
                 data: {action:'chercher',categorie:'clients',client:client},
                 success:function(data){
                     if(data !=''){
-                        console.log(data)
+                        $('#result_recherche').html(data);
                     }else{
                         $('#result_recherche').innerHTML += "<div class='text-red-600 text-center font-medium mt-10'> Aucun Client ne correspondant a votre recherche </div> "
                     }
@@ -144,15 +145,26 @@ $(document).ready(function(){
     // ******* Function Info Start      *******
         $(document).on('click','.info',function(){
             var idClient = $(this).data('id')
+            $('.page-content').load('views/info.php')
+            console.log(idClient)
             $.ajax({
                 type: 'POST',
-                url: ajax,
-                data: {clientId:idClient,action:'listeClient',categorie:'clients'},
+                url: 'views/info_client.php',
+                data: {action:'chercher',categorie:'clients',info_client:idClient},
                 success:function(data){
-                $('#client').html(data.devis),
-                $('#info_client').html(data.client)
+                    // console.log(data);
+                    $('#info_client').html(data);
                 }
-            })
+            });
+            $.ajax({
+                type: 'POST',
+                url: 'views/info_devis_client.php',
+                data:{action:'chercher',categorie:'devis',info_client:idClient},
+                success: function(data){
+                    console.log('ok info');
+                    $('#client_devis').html(data);
+                }
+            });
         })
     // ******* Function Info End        *******
     // ******* Function Ajout Start     *******
@@ -350,9 +362,23 @@ $(document).ready(function(){
              // ******** Function Pagination Liste Devis Start    *******
 
              // ******** Function Pagination Liste Devis End      *******
+
+             // ******** Function Details Info Devis Start    *******
+             $(document).on('click','.details_info',function(){
+                var devis_num= $(this).data('id_devis');
+                var client_num = $(this).data('id_client');
+                $.ajax({
+                    type: 'POST',
+                    url:'views/details_devis.php',
+                    data:{action:'details',categorie:'devis',devis_num:devis_num},
+                    success: function(data){
+                        $('.page-content').html(data)
+                    }
+                });
+             });
+             // ******** Function Details Info Devis End      *******
              
 //  ************************************  References ************************************
             //  Modal modification
-            $(document).on('click',)
 
 })

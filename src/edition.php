@@ -10,7 +10,7 @@ define('EURO',chr(128));
 
 
 if(isset($_GET['info']) && $_GET['info'] !=''){
-    require('cell.php');
+    require('../fpdf/cell.php');
 
     $tab_param=explode("-",$_GET['info']);
     $num_client=$tab_param[0];

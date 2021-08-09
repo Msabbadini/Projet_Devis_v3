@@ -14,8 +14,8 @@ require_once '../modeles/reference.class.php';
         elseif($_POST['action'] == 'modifier') $ret = $obj->Modifier();
         elseif($_POST['action'] == 'Supprimer') $ret = $obj->Supprimer();
         elseif($_POST['action'] == 'liste') $ret =  $obj->Liste();
-        elseif($_POST['action'] == 'listeClient') $ret =$obj->ListeClient();
         elseif($_POST['action'] == 'chercher') $ret = $obj->Chercher();
+        elseif($_POST['action'] == 'details') $ret = $obj->Details();
 
     }
     // Utilisable si je met du JSON 

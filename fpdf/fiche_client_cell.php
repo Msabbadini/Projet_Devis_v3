@@ -1,29 +1,23 @@
 <?php
-    require('../fpdf/fpdf.php');
+require_once 'fpdf.php';
 
+class ClientCell extends FPDF{
 
-class CellPDF extends FPDF
-{
-       //header
-       function Header(){
-        $this->Cell(210,39,'');
-        //saut de ligne
-        $this->Ln(20);
-    }
-
-      // Footer
-  function Footer() {
-    // Positionnement à 1,5 cm du bas
-    $this->SetY(-25);
-    // Police Arial italique 8
-    $this->SetFont('Helvetica','I',7);
-    $this->Cell(0,5,'Etablissement Thibaud - Travaux de toiture - Couverture - Charpente',0,1,'C');
-    $this->Cell(0,5,'TVA applicable 5.5% - 10% - 20% selon travaux',0,1,'C');
-    $this->Cell(0,5,'Devis Valable 1 mois',0,1,'C');
-    // Numéro de page, centré (C)
-    $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
-  }
-function VCell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false)
+            function setClient($nom,$prenom){
+                $this->client=$nom.' '.$prenom;
+            }
+            // Pied de page
+            function Footer()
+            {
+                // Positionnement à 1,5 cm du bas
+                $this->SetY(-15);
+                // Police Arial italique 8
+                $this->SetFont('Arial','I',8);
+                $this->cell(0,5,'Client : '.$this->client,0,1,'C');
+                // Numéro de page
+                $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+            }
+            function VCell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false)
 {
     //Output a cell
     $k=$this->k;
@@ -285,4 +279,5 @@ function Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link
         $this->x+=$w;
 }
 }
+
 ?>

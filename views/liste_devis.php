@@ -3,6 +3,7 @@ include '../src/modal.php';
 require_once '../modeles/devis.class.php';
 global $Devis
 ?>
+<!-- recherche pregmatch date nom client -->
 <div class="-my-2 py-2 overflow-x-auto ">
                 <div class="align-middle rounded-tl-lg rounded-tr-lg inline-block w-full py-4 overflow-hidden bg-white shadow-lg px-12">
                     <div class="flex justify-between">

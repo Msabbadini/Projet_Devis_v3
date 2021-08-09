@@ -86,6 +86,25 @@
                 $ref['ref']['ref_fournisseur'] = $data['ref_fournisseur'];
             echo json_encode($ref);
         }
+        if(isset($_POST['info_client'])){
+            $idClient=$_POST['info_client'];
+            $req = $this->getDatabase()->prepare('SELECT * FROM '.$this->table_devis.' WHERE client_num=?');
+            $req->execute([$idClient]);
+            $data = $req->fetchAll();
+            return $data;
+        }
+        return false;
+    }
+
+    public function Details(){
+        if(isset($_POST['devis_num'])){
+            $devis=$_POST['devis_num'];
+            $req= $this->getDatabase()->prepare('SELECT * FROM '.$this->table_details.' INNER JOIN articles on details_ref = article_code WHERE detail_devis = ?');
+            $req->execute([$devis]);
+            $data=$req->fetchAll();
+            return $data;
+        }
+        return false;
     }
  }
  $Devis = new Devis();

@@ -126,7 +126,7 @@ $('#modif_client').submit(function(){
             console.log(xhr);
 		});
        
-
+    
     })
 // Function Modal End	
 </script>

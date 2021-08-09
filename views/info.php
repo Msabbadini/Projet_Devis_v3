@@ -1,53 +1,12 @@
 <?php 
-include('src/function.php');
-include 'src/connexion.php';
-
-if(isset($_GET['clientId'])){
-    $id =htmlspecialchars($_GET['clientId']);
-}
-// <?php echo $r['type_devis']=='Devis' ? $r['statut_devis'] : $r['statut_facture']; methode tertiare
-$req=$db->prepare('SELECT * FROM devis  INNER JOIN clients AS c ON client_num = id_client WHERE client_num = ? ORDER BY devis_num');
-$req->execute([$id]);
-$req->setFetchMode(PDO::FETCH_ASSOC);
-$data = $req->fetchAll();
-
-
+require_once '../modeles/devis.class.php';
+require_once '../modeles/client.class.php';
+global $Clients;
+global $Devis;
 ?>
 <div class="-my-2 py-2 overflow-x-auto ">
       <div id='info_client' class="align-middle rounded-tl-lg rounded-tr-lg inline-block w-full py-4 overflow-hidden bg-white shadow-lg px-12">
-          <?php
-          $req2 = $db -> prepare('SELECT * FROM clients WHERE id_client= ?');
-          $req2 -> execute([$id]);
-          $client= $req2-> fetchAll();
-          foreach($client as $d){
-          ?>
-        <h1 class="text-lg font-medium leading-6 text-gray-900"><span class='text-indigo-600 font-bold'>Fiche Client :</span>  <?=$d['civilite_client'].' '. $d['nom_client'].' '.$d['prenom_client'] ?></h1>
-        <div class="flex flex-wrap">
-
-            <p class="m-5  text-md text-gray-600">
-               <span class='text-indigo-600 font-bold'> Email : </span> <?= $d['email_client'] ?>
-            </p>
-            <p class='m-5 text-md text-gray-600'>
-               <span class='text-indigo-600 font-bold'>N° Téléphone : </span>  
-                <?php
-                if($d['telephone_fixe_client'] != ''){
-                    echo $d['telephone_fixe_client'].'/'.$d['telephone_portable_client'];
-                }elseif($d['telephone_portable_client'] == ''){
-                    echo $d['telephone_fixe_client'];
-                }elseif($d['telephone_fixe_client'] == ''){
-                    echo $d['telephone_portable_client'];
-                }   
-                ?>
-            </p>
-            <p class="m-5 text-md text-gray-600">
-                <span class="text-indigo-600 font-bold">Adresse Client : </span>
-                <?= $d['adresse_postal'].' , '.$d['code_postal'].' '.$d['ville_client'] ?>
-            </p>
-            <button data-id_client="<?= $d['id_client']?>" class="print_client px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-indigo-500 hover:text-white focus:outline-none" type='button'>Impression Fiche Client </button>
-        </div>
-        <?php
-          }
-        ?>
+        
         <div id="msg"></div>
       </div>
     </div>
@@ -80,70 +39,13 @@ $data = $req->fetchAll();
                                 <th class="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">Type</th>
                                 <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Statut</th>
                                 <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Montant Devis</th>
-                                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Status</th>
+                                <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Date</th>
                                 <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Date Création</th>
                                 <th class="px-6 py-3 border-b-2 border-gray-300"></th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white" id='client'>
-                           <?php
-                           foreach($data as $r){
-                           ?>
-                        <tr id='<?= $r['id_client'] ?>'>
-    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-        <div class="flex items-center">
-            <div>
-                <div class="text-sm leading-5 text-gray-800"><?= $r['devis_num'] ?></div>
-            </div>
-        </div>
-    </td>
-    <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5"><?= $r['type_devis'] ?></td>
-    <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5"><?php 
-    if($r['type_devis']=='Devis'){
-        if($r['statut_devis']=='En attente'){
-    ?>
-    <span class="relative inline-block px-3 py-1 font-semibold text-yellow-900 leading-tight">
-    <span aria-hidden class="absolute inset-0 bg-yellow-500 opacity-50 rounded-full"></span>
-    <span id='fiche_client' class="relative text-xs"><?= $r['statut_devis'] ?></span>
-    <?php
-        }elseif($r['statut_devis']=='Valider'){
-            ?>
-    <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-    <span aria-hidden class="absolute inset-0 bg-green-500 opacity-50 rounded-full"></span>
-    <span id='fiche_client' class="relative text-xs"><?= $r['statut_devis'] ?></span>
-
-            <?php
-        }elseif($r['statut_devis']=='Refus'){
-            ?>
-    <span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-    <span aria-hidden class="absolute inset-0 bg-red-500 opacity-50 rounded-full"></span>
-    <span id='fiche_client' class="relative text-xs"><?= $r['statut_devis'] ?></span>
-
-            <?php
-        }
-    }
-
-    
-    ?></td>
-    <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-    <?= $r['devis_montant'] ?>€
-    </td>
-    <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-    <?= $r['date_devis_modification']==''? 'Aucune Modification':$r['date_devis_modification'] ?>
-    </td>
-
-    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5"><?= $r['date_creation'] ?></td>
-    <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
-        <button data-id='<?= $r['id_client'] ?>' class="info px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-indigo-500 hover:text-white focus:outline-none">Details </button>
-        <button data-id='<?= $r['id_client'] ?>' data-id_devis='<?= $r['devis_num']?>' class="print px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-yellow-500 hover:text-white focus:outline-none" Type='button'>Impression </button>
-        <button class="update px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-green-500 hover:text-white focus:outline-none ease-liner " data-role='update' data-id='<?= $r['devis_num'] ?>' type='button' >Modification </button>
-        <button id='<?= $r['id_client']?>' class="delete px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-red-600 hover:text-white focus:outline-none">Suppression </button>
-    </td>
-    </tr>
-                        <?php
-                            }
-                           ?>
-                               
+                        <tbody class="bg-white" id='client_devis'>
+                           
                         </tbody>
                     </table>
                   <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">
