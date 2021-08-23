@@ -1,5 +1,6 @@
 <?php
-
+define("LIMIT",10);
+require_once '../Helpers/helper.php';
 abstract class DB{
     
     // Transmission des infos de notre BDD

@@ -72,20 +72,25 @@ $(document).ready(function(){
 //  ******************  Client ******************
     // ******* Pagination tableau CLient Start *******
     $(document).on('click', '.displayRecords',function(){
-        var numRecords = $(this).data('pagelimit')
-        var pageNum = $(this).data('pagenum')
-        console.log(numRecords)
+        var pageNum = $(this).data('pagenum');
+        var categorie =$(this).data('categorie');
         console.log(pageNum)
         $.ajax({
             type: "POST",
             url: ajax,
-            data: {action:'liste',categorie:'devis',show:numRecords,pageNum:pageNum},
+            data: {action:'liste',categorie:categorie,page:pageNum,pagination:'on'},
+            dataType:'JSON',
             cache: false,
             beforeSend: function () { 
                 $('.loader').html('<img src="src/Infinity-loading.gif" alt="" width="24" height="24" >');
             },
-            success: function(html) {    
-                $("#results").html( html );
+            success: function(data) { 
+                if(data.html){
+                    $("#client").html(data.html);
+                }   
+                if(data.pagination){
+                    $("#pagination").html(data.pagination);
+                }   
                 $('.loader').html('');
             }
         })
@@ -113,18 +118,19 @@ $(document).ready(function(){
     // ******* Barre de recherche END   *******
     // ******* Function Delete Start    *******
         $(document).on('click','.delete',function(){
-            var idClient = $(this).attr('id')
+            var idClient = $(this).data('id')
             var info_client = $(this).data('client')
-            $.ajax({
-                type: 'POST',
-                url: ajax,
-                data: {clientId:idClient,action:'supprimer',categorie:'clients'},
-                success: function(data){
-                    if(confirm('Êtes-vous sur de vouloir supprimer '+info_client+' ?')){
+            if(confirm('Êtes-vous sur de vouloir supprimer '+info_client+' ?')){
+                $.ajax({
+                    type: 'POST',
+                    url: ajax,
+                    data: {action:'Supprimer',categorie:'clients',client:idClient},
+                    success: function(data){
+                        console.log(data)
                         $('#'+idClient).remove();
                     }
-                }
-            })
+                })
+            }
         });
     // ******* Function Delete End      *******
     // ******* Function Update Start    *******
@@ -255,7 +261,7 @@ $(document).ready(function(){
                         }else{
                             $('#result_recherche_devis').innerHTML += "<div class='text-red-600 text-center font-medium mt-10'> Aucun Client ne correspondant a votre recherche </div> "
                         }
-                    }
+                    }   
                 })
             }
         });
@@ -277,9 +283,10 @@ $(document).ready(function(){
             var id_client = $(this).data('client')
             $.ajax({
                 type: 'POST',
-                url: 'fonctions/devis_client.php',
-                data:{id_client:id_client},
+                url: 'views/devis_client.php',
+                data:{id_client:id_client,categorie:'devis',action:'chercher'},
                 success: function(data){
+                    console.log(data)
                     $('#result_search').html(data)
                     $('#result_recherche_devis').html('')
                 }
@@ -349,7 +356,7 @@ $(document).ready(function(){
                         // voir pour un switch case avec les ids ou faire une colonne dans BDD pour différencier
                         var quantite_commande = parseInt(data.ref['quantite_m2'])*met_toiture/data.ref['qte']
                         var quantite_commande = Math.round(quantite_commande)
-                        var prix_commande = quantite_commande * data.ref['prix_fournisseur']
+                        var prix_commande =( quantite_commande * data.ref['prix_fournisseur']).toFixed(2)
                         console.log(data.ref['quantite_m2'])
                         console.log(data.ref['prix_fournisseur'])
                         console.log(quantite_commande)
@@ -377,7 +384,27 @@ $(document).ready(function(){
                 });
              });
              // ******** Function Details Info Devis End      *******
-             
+                 // ******* Barre de recherche *******
+    $(document).on('keyup','#search_devis',function(){
+        $('#result_recherche').html('')
+        var client = $(this).val()
+        if(client != ''){
+            $.ajax({
+                type: 'POST',
+                url: 'views/recherche_client_devis.php',
+                data: {action:'chercher',categorie:'clients',client:client},
+                success:function(data){
+                    if(data !=''){
+                        $('#result_recherche_devis').html(data);
+                    }else{
+                        $('#result_recherche_devis').innerHTML += "<div class='text-red-600 text-center font-medium mt-10'> Aucun Client ne correspondant a votre recherche </div> "
+                    }
+                }
+            })
+        }
+    });
+    // ******* Barre de recherche END   *******
+    
 //  ************************************  References ************************************
             //  Modal modification
 

@@ -1,6 +1,5 @@
 <?php
  require_once 'connexion.class.php';
- require_once 'pagination.class.php';
 // require 'Helpers/helper.php';
  class Client extends DB{
     function __construct(){
@@ -111,41 +110,55 @@
         } else {
         $ret['msg'] = "<span style='color:red'>Corriger les erreurs pour pouvoir continuer</span>";
         };
-         echo json_encode($ret) ;// on converti le tableau au format JSON et on le renvoie
         
         // Ajout Client Start
         if($ret['status'] == 'ok'){
-
-            if($verifClientNom==0 && $verifClientPrenom==0){
+            
+            if($verifClientNom==0 && $verifClientPrenom==0 || $verifClientNom==0 && $verifClientPrenom==1 || $verifClientNom!=0 && $verifClientPrenom==0 ){
                 $req = $this->getDatabase()->prepare('INSERT INTO '.$this->table_client.' (civilite_client,nom_client,prenom_client,adresse_postal,code_postal,ville_client,email_client,telephone_fixe_client,telephone_portable_client,infos_complementaire) VALUES (?,?,?,?,?,?,?,?,?,?)');
                 $req-> execute([$genre,$nom,$prenom,$adresse,$code_postal,$ville,$mail,$telFixe,$telPortalble,$info]);
-        }
-            else if($verifClientNom==0 && $verifClientPrenom==1){
-                $req = $this->getDatabase()->prepare('INSERT INTO '.$this->table_client.' (civilite_client,nom_client,prenom_client,adresse_postal,code_postal,ville_client,email_client,telephone_fixe_client,telephone_portable_client,infos_complementaire) VALUES (?,?,?,?,?,?,?,?,?,?)');
-                $req-> execute([$genre,$nom,$prenom,$adresse,$code_postal,$ville,$mail,$telFixe,$telPortalble,$info]);
-        
             }
-            else if($verifClientNom!=0 && $verifClientPrenom==0){
-                $req = $this->getDatabase()->prepare('INSERT INTO '.$this->table_client.' (civilite_client,nom_client,prenom_client,adresse_postal,code_postal,ville_client,email_client,telephone_fixe_client,telephone_portable_client,infos_complementaire) VALUES (?,?,?,?,?,?,?,?,?,?)');
-                $req-> execute([$genre,$nom,$prenom,$adresse,$code_postal,$ville,$mail,$telFixe,$telPortalble,$info]);
-        };
         };
         
+        return $ret ;// on converti le tableau au format JSON et on le renvoie
         // return json_encode ($ret);
     }
     //*************************  FUNCTION AJOUT CLIENT END   **************************
 
     //*************************  FUNCTION LISTE CLIENT START **************************
-    function Liste(){
-      
-        $tab =array();
-        // if(isset($_POST['page']) && is_numeric($_POST['page']));
-        // // calcul de l'offset numéro de page -1
-        // $offset = ($_POST['page']-1)*$limit;
-        $result= $this->getDatabase()->prepare('SELECT * FROM '.$this->table_client );
+    function Liste($html=false){
+        $endSql='';
+        
+        if(isset($_POST['page']) && is_numeric($_POST['page']) && $_POST['page'] > 1){
+            
+            // calcul de l'offset numéro de page -1
+            $offset = ($_POST['page']-1)*LIMIT;
+            $endSql='OFFSET '.$offset;
+        }
+        $result= $this->getDatabase()->prepare('SELECT * FROM '.$this->table_client.' LIMIT '.LIMIT.' '.$endSql );
         $result->execute();
         $data =$result->fetchAll();
-        return $data;
+        if($data && is_array($data)){
+            $tab=[];
+            if($html){
+                ob_start();
+                include_once '../views/view_liste_client.php';
+                $tab['html']=ob_get_contents();
+                ob_end_clean();
+                return $tab;
+            }
+            return $data;
+        }
+        return false;
+    }
+    function Nombre(){
+        $result= $this->getDatabase()->prepare('SELECT count(*) FROM '.$this->table_client);
+        $result->execute();
+        $data =$result->fetch();
+        if($data && isset($data[0]) && is_numeric($data[0])){
+            return $data[0];
+        }
+        return 0;
     }
     //*************************  FUNCTION LISTE CLIENT END      **************************
 
@@ -155,15 +168,15 @@
     
     //*************************  FUNCTION DELETE CLIENT START   **************************
         function Supprimer(){         
-            if(isset($_POST['clientId'])){
-                $clientId = $_POST['clientId'];
-                $req = $db->prepare('DELETE FROM '.$this->table_client.' WHERE id_client= ?');
-                $req->execute($clientId);
+            if(isset($_POST['client'])){
+                $clientId = $_POST['client'];
+                $req = $this->getDatabase()->prepare('DELETE FROM '.$this->table_client.' WHERE id_client= ?');
+                $req->execute([$clientId]);
         
                 if($req){
-                    echo 'success';
+                    return 'success';
                 }else{
-                    echo 'error';
+                    return 'error';
                 }
             }
         }

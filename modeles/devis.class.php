@@ -19,54 +19,38 @@
         
     }
 
-    public function Liste(){
-
-        // Pagination Liste Devis Start
-        if(!(isset($_POST['pageNum']))){
-            $ref=[];
-            $html=[];
-            $numero_de_page=1;
-        }else{
-            $numero_de_page=intval($_POST['pageNum']);
+    public function Liste($html=false){
+        $endSql='';
+        if(isset($_POST['page']) && is_numeric($_POST['page']) && $_POST['page'] > 1){
+            // calcul de l'offset numéro de page -1
+            $offset = ($_POST['page']-1)*LIMIT;
+            $endSql='OFFSET '.$offset;
         }
-
-        $page_limite = ($_POST['show'] <> '' && is_numeric($_POST['show']))? intval($_POST['show']) :10;
-        $req= 'SELECT count(*) as count FROM devis';
-        try{
-            $requete = $this->getDatabase()->prepare($req);
-            $requete -> execute();
-            $tResult = $requete ->fetchAll();
-        } catch(Exception $e){
-            echo ($e->getMessage());
-        }
-        $cnt = $tResult[0]['count'];
-        $last_page = ceil($cnt/$page_limite);
-        //
-        $lower_limit=($numero_de_page -1)*$page_limite;
-        $requete2= 'SELECT * FROM devis  INNER JOIN clients AS c ON client_num = id_client ORDER BY devis_num LIMIT '.($lower_limit).', '.($page_limite).' ';
-        try {
-            $req2= $this->getDatabase()->prepare($requete2);
-            $req2->execute();
-            $resultats= $req2->fetchAll();
-            foreach($resultats as $r){
-                $ref[$r['devis_num']]['id_devis']=$r['devis_num'];
-                $ref[$r['devis_num']]['nom']=$r['nom_client'];
+        $result= $this->getDatabase()->prepare('SELECT * FROM '.$this->table_devis.' INNER JOIN '.$this->table_client .' on client_num = id_client LIMIT '.LIMIT.' '.$endSql );
+        $result->execute();
+        $data =$result->fetchAll();
+        if($data && is_array($data)){
+            $tab=[];
+            if($html){
+                ob_start();
+                include_once '../views/view_liste_devis.php';
+                $tab['html']=ob_get_contents();
+                ob_end_clean();
+                return $tab;
             }
-        } catch (Exception $e) {
-            echo ($e->getMessage());
+            return $data;
         }
-        for($i=1;$i<=$last_page;$i++){
-            if($i==$numero_de_page){?>
-                <a href="#"  class=" -ml-px relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary"><?php echo $i ?></a>
+        return false;
+    }
 
-            <?php }else{ ?>
-                <a href="#" data-pagenum='<?= $i ?>' data-pagelimit='<?= $page_limite ?>' class="displayRecords -ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary"><?php echo $i ?></a>
-            <?php    
-            }
+    function Nombre(){
+        $result= $this->getDatabase()->prepare('SELECT count(*) FROM '.$this->table_devis);
+        $result->execute();
+        $data =$result->fetch();
+        if($data && isset($data[0]) && is_numeric($data[0])){
+            return $data[0];
         }
-        echo json_encode($ref);
-        // Pagination Liste Devis End
-
+        return 0;
     }
 
     public function Chercher(){
@@ -83,7 +67,7 @@
                 $ref['ref']['metrage'] = $data['quantite_m2'];
                 $ref['ref']['prix_m2'] = $data['prix_metrage_unit'];
                 $ref['ref']['quantite_m2'] = $data['quantite_m2'];
-                $ref['ref']['ref_fournisseur'] = $data['ref_fournisseur'];
+                $ref['ref']['ref_fournisseur'] = $data['id_fournisseur'];
             echo json_encode($ref);
         }
         if(isset($_POST['info_client'])){

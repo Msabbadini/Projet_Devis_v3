@@ -13,14 +13,18 @@ require_once '../modeles/reference.class.php';
         if($_POST['action'] == 'ajout') $ret = $obj->Ajouter();
         elseif($_POST['action'] == 'modifier') $ret = $obj->Modifier();
         elseif($_POST['action'] == 'Supprimer') $ret = $obj->Supprimer();
-        elseif($_POST['action'] == 'liste') $ret =  $obj->Liste();
+        elseif($_POST['action'] == 'liste') $ret =  $obj->Liste(true);
         elseif($_POST['action'] == 'chercher') $ret = $obj->Chercher();
         elseif($_POST['action'] == 'details') $ret = $obj->Details();
-
+           
+        if(isset($_POST['pagination']) && $_POST['pagination'] == 'on' && is_array($ret)){
+            $nombre=$obj->Nombre();
+            if(isset($_POST['page']) && is_numeric($_POST['page']) && $_POST['page']>1) $page=$_POST['page']; else $page=1;
+            $ret['pagination']=Pagination($nombre,$_POST['categorie'],$page);
+        }
     }
     // Utilisable si je met du JSON 
-   print_r( $ret ); 
+    if(is_array($ret)) echo json_encode($ret); else echo $ret;
    die;
-
-
+   
 ?>

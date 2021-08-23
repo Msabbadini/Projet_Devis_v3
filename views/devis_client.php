@@ -1,11 +1,8 @@
 <?php
-include '../src/connexion.php';
-if(!empty($_POST['id_client'])){
-        $id= $_POST['id_client'];
-
-        $req = $db->prepare('SELECT * FROM clients WHERE id_client = ? ');
-        $req ->execute([$id]);
-        $data = $req->fetchAll();
+require_once '../modeles/client.class.php';
+global $Clients;
+$data = $Clients->Chercher();
+if($data){
         foreach($data as $d){ ?>
               <div class="col-span-6 ">
 

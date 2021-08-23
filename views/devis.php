@@ -24,7 +24,7 @@ global $References;
                                         </svg>
                                     </span>
                                 </div>
-                                <input type="text" class="flex-shrink flex-grow flex-auto leading-normal tracking-wide w-px  border border-none border-l-0 rounded rounded-l-none px-3 relative focus:outline-none text-xxs  lg:text-base text-gray-500 font-thin" placeholder="Recherche Client" id='search_devis_client'>
+                                <input type="text" class="flex-shrink flex-grow flex-auto leading-normal tracking-wide w-px  border border-none border-l-0 rounded rounded-l-none px-3 relative focus:outline-none text-xxs  lg:text-base text-gray-500 font-thin" placeholder="Recherche Client" id='search_devis'>
                             </div>
                         </div>
                     </div>
