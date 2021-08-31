@@ -68,6 +68,7 @@
                 $ref['ref']['prix_m2'] = $data['prix_metrage_unit'];
                 $ref['ref']['quantite_m2'] = $data['quantite_m2'];
                 $ref['ref']['ref_fournisseur'] = $data['id_fournisseur'];
+                $ref['ref']['calcul_qte'] = $data['calcul_ref'];
             echo json_encode($ref);
         }
         if(isset($_POST['info_client'])){

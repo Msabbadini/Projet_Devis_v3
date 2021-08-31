@@ -55,9 +55,17 @@ global $References;
             }?>
             </select>
               </div>
+              <div class="col-span-6">
+                <span class='error_metrage text-indigo-600 text-xl'></span>
+              </div>
               <div class="col-span-2">
-                <label class="block text-sm font-medium text-gray-700"> m² Toiture</label>
-                <input type="number" id='metrage_toiture' name="metrage_toiture"  autocomplete="Metrage toiture client" class="mt-1 pl-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                <label class="block text-sm font-medium text-gray-700"> M² Toiture</label>
+                <input type="number" id='metrage_toiture_M2' name="metrage_toiture"  autocomplete="Metrage toiture client" class="mt-1 pl-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+
+              </div>
+              <div class="col-span-2">
+                <label class="block text-sm font-medium text-gray-700"> ML Toiture</label>
+                <input type="number" id='metrage_toiture_Ml' name="metrage_toiture"  autocomplete="Metrage toiture client" class="mt-1 pl-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
 
               </div>
               <div class="col-span-6 sm:col-span-6">
@@ -72,7 +80,7 @@ global $References;
               </div>
 
               <div class="col-span-6 sm:col-span-2">
-                <label  class="block text-sm font-medium text-gray-700">Prix HT Fournisseur</label>
+                <label  class="block text-sm font-medium text-gray-700"> HT Fournisseur</label>
                 <input type="text" id='ref_prix_fournisseur' name="prix_fournisseur"  autocomplete="" class="mt-1 pl-2 bg-indigo-500 text-white font-bold focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                 
               </div>
@@ -100,30 +108,30 @@ global $References;
                 <label  class="block text-sm font-medium text-indigo-700">Prix HT Commande</label>
                 <input type="number" id='ref_prix_commande' name="quantite_commande"  autocomplete="Adresse postal client" class="mt-1 pl-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
               </div>
-
+              
             </div>
           </div>
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
             <input type="hidden" name="id_article" id='ref_id'>
-            <button type="button" id='ajout_ref_btn' class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            <button type="button" id='ajout_ref_btn' data-calcul_qte='' class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
               Ajouter
             </button>
-            <button type="submit" id='valide_ref_btn' class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            <!-- <button type="submit" id='valide_ref_btn' class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
               Validation Devis
-            </button>
+            </button> -->
           </div>
         </div>
       </form>
       </div>
     </div>
     <div class="mt-5 md:mt-0 md:col-span-2">
-      <form id='ajout_client'>
+      <form id='tab_devis'>
         <div class="shadow overflow-hidden sm:rounded-md">
           <div  class="px-4 py-3 bg-gray-50 text-left sm:px-6">
             <input type="hidden" name="id_client" value='' id='id_client'>
             <label class="total_commande text-indigo-500 text-lg font-semibold col-span-2">Total Commande : </label>
             <input type='number' id="total_commande" class='bg-indigo-500 text-white font-bold rounded-md pl-3' value='0' readonly>
-            <button type="submit" id='valide_ref_btn' class="inline-flex justify-end py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            <button type="button" id='valide_devis_btn' class="inline-flex justify-end py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
               Validation Devis
             </button>          
           </div>
@@ -134,7 +142,7 @@ global $References;
                 <tr>
                   <th>N° Référence</th>
                   <th>Designation Ref</th>
-                  <th>Qte Fournisseur</th>
+                  <th>Qte devis</th>
                   <th>Prix Total Ht </th>
                 </tr>
               </thead>

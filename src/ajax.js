@@ -1,4 +1,3 @@
-
 var adresse = 'http://localhost/testV4/src/fiche_client.php?client='
 var ajax = 'controller/vrac.php'
 // ******* Modal Start   *******
@@ -280,11 +279,13 @@ $(document).ready(function(){
         //     [type]: [description]
         // 
         $(document).on('click','.result_client',function(){
-            var id_client = $(this).data('client')
+            var id_client = $(this).data('client_devis')
+            // alert(id_client)
+            // console.log(id_client);
             $.ajax({
                 type: 'POST',
                 url: 'views/devis_client.php',
-                data:{id_client:id_client,categorie:'devis',action:'chercher'},
+                data:{info_client:id_client,categorie:'clients',action:'chercher'},
                 success: function(data){
                     console.log(data)
                     $('#result_search').html(data)
@@ -341,7 +342,10 @@ $(document).ready(function(){
              // ******** Function Select choix Tableau Devis Toiture Start  *******
              $(document).on('change','#select_ref',function(){
                 var choix =$(this).val()
-                var met_toiture= $('#metrage_toiture').val()
+                var met_toiture= $('#metrage_toiture_M2').val()
+                var met_toit = $('#metrage_toiture_Ml').val()
+                if(met_toiture !='' || met_toit != '' && $.isNumeric(met_toit) || $.isNumeric(met_toiture)){
+                    $('.error').remove();
                 $.ajax({
                     type: 'POST',
                     url: ajax,
@@ -353,19 +357,45 @@ $(document).ready(function(){
                         for(var prop in data.ref){
                             $('#ref_'+prop).val(data.ref[prop]);
                         }
-                        // voir pour un switch case avec les ids ou faire une colonne dans BDD pour différencier
-                        var quantite_commande = parseInt(data.ref['quantite_m2'])*met_toiture/data.ref['qte']
-                        var quantite_commande = Math.round(quantite_commande)
-                        var prix_commande =( quantite_commande * data.ref['prix_fournisseur']).toFixed(2)
+                        // quantite_m2*met_toiture/qte_fournisseur
+                        var mapObj={
+                            'quantite_m2':data.ref['quantite_m2'],
+                            'met_toiture':met_toiture,
+                            'met_toit':met_toit,
+                            'qte_fournisseur':data.ref['qte']
+                        }
+                        var test = data.ref['calcul_qte']
+                        if(test !=''){
+                        console.log(test)
+                        test =data.ref['calcul_qte'].replace(/quantite_m2|met_toiture|met_toit|qte_fournisseur/gi,function(matched){return mapObj[matched]})
+                        result = math.evaluate(test)
+                        console.log('test de la fonction :'+result)
+                        var quantite_commande = Math.ceil(result)
+                        var prix_commande =( result * data.ref['prix_fournisseur']).toFixed(2)
                         console.log(data.ref['quantite_m2'])
                         console.log(data.ref['prix_fournisseur'])
                         console.log(quantite_commande)
                         $('#ref_qte_commande').val(quantite_commande)
                         $('#ref_prix_commande').val(prix_commande)
+                        }else{
+                            var quantite_commande=1;
+                            var prix_commande=0
+                            $('#ref_qte_commande').val(quantite_commande)
+                            $('#ref_prix_commande').val(prix_commande)    
+                        }
                     }
                 })
+            }else{
+                $('.error_metrage').text('Veuillez mettre un metrage')
+            }
              });
              // ******** Function Select choix Tableau Devis Toiture End    *******
+             // ******** Function Validation Tableau Devis Toiture Start    *******
+             $(document).on('click','#valide_devis_btn',function(){
+                var tab = $(this).data('client')
+                console.log(tab)
+             });
+             // ******** Function Validation Tableau Devis Toiture End      *******
              // ******** Function Pagination Liste Devis Start    *******
 
              // ******** Function Pagination Liste Devis End      *******

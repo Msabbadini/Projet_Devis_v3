@@ -1,5 +1,5 @@
 <?php
-define("LIMIT",10);
+define("LIMIT",5);
 require_once '../Helpers/helper.php';
 abstract class DB{
     
