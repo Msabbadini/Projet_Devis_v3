@@ -25,9 +25,14 @@ var ajax = 'controller/vrac.php'
         });
     }
 
+// tableau devis
+var data=[];
+
 
 // ******* Modal End     *******
 $(document).ready(function(){
+
+
     // ecoute le document au niveau du dom si MAJ ('evenement''element id ou class''callback') 
 //  ******************  Index ******************
     // ******* Menu Start *******
@@ -55,7 +60,8 @@ $(document).ready(function(){
                     case 'liste_devis':
                         displayRecords(10, 1);
                         break;
-                
+                    case 'devis':
+                        data.splice(0,data.length);
                     default:
                         break;
                 }
@@ -325,6 +331,9 @@ $(document).ready(function(){
                 total += ref_prix_commande
                 $('#total_commande').val(total.toFixed(2))
                 console.log(total)
+                var ligne ={id_article:id_article,qte:ref_qte_commande,ref_prix:ref_prix_commande};
+                data.push(ligne)
+                console.log(data)
              });
              // ******** Function Insert Tableau Devis Toiture End   *******
              // ******** Function Remove Ligne Tableau Devis Toiture Start   *******
@@ -332,9 +341,9 @@ $(document).ready(function(){
                 var montant = $(this).data('refcommande')
                 var total = parseFloat($('#total_commande').val())
                 total -= montant
-                console.log('prix'+$(this).data('refcommande'))
-                console.log(typeof montant +' ref_commande')
-                console.log(typeof total +' '+total)
+                // console.log('prix'+$(this).data('refcommande'))
+                // console.log(typeof montant +' ref_commande')
+                // console.log(typeof total +' '+total)
                 $('#total_commande').val(total.toFixed(2))
                 $(this).closest('tr').remove()
              });
