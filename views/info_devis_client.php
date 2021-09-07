@@ -54,7 +54,7 @@ global $Devis;
             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
                 <button data-id_devis='<?= $r['devis_num'] ?>' data-id_client='<?=$r['client_num']?>' class="details_info px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-indigo-500 hover:text-white focus:outline-none">Details </button>
                 <button data-id='<?= $r['client_num'] ?>' data-id_devis='<?= $r['devis_num']?>' class="print px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-yellow-500 hover:text-white focus:outline-none" Type='button'>Impression </button>
-                <button class="update px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-green-500 hover:text-white focus:outline-none ease-liner " data-role='update' data-id='<?= $r['devis_num'] ?>' type='button' >Modification </button>
+                <button class="update_devis px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-green-500 hover:text-white focus:outline-none ease-liner "  data-id='<?= $r['devis_num'] ?>' data-modal='overlay_m' type='button' >Modification </button>
                 <button id='<?= $r['client_num']?>' class="delete px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-red-600 hover:text-white focus:outline-none">Suppression </button>
             </td>
         </tr>

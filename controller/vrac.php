@@ -24,7 +24,13 @@ require_once '../modeles/reference.class.php';
         }
     }
     // Utilisable si je met du JSON 
-    if(is_array($ret)) echo json_encode($ret); else echo $ret;
+
+    if(is_array($ret)){
+        if(isset($ret[0])){
+            $ret=$ret[0];
+        }
+        echo json_encode($ret);  
+    }else echo $ret;
    die;
    
 ?>

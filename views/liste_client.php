@@ -1,5 +1,4 @@
 <?php 
-include '../src/modal.php';
 require_once '../modeles/client.class.php';
 global $Clients;
 ?>
@@ -39,7 +38,7 @@ global $Clients;
                                 <th class="px-6 py-3 border-b-2 border-gray-300"></th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white" id='client'>
+                        <tbody class="bg-white" id='resultats'>
                             <?php 
                             $data = $Clients->Liste();
                             include_once './view_liste_client.php'; 
@@ -67,4 +66,7 @@ global $Clients;
         </div>
     </div>
 </div>
-           
+<?php
+$modal_content='client';
+include 'modals/modal_statut.php';
+?>

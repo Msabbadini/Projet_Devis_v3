@@ -7,6 +7,31 @@
         parent::__construct();
     } 
 
+    public function Ajouter(){
+        if(isset($_POST['montant']) && !empty($_POST['montant']) && isset($_POST['client']) && !empty($_POST['client']) && isset($_POST['details']) && !empty($_POST['details'])){
+            $devis_date = date('d/m/Y');
+            $req=$this->getDatabase()->prepare('INSERT INTO '.$this->table_devis.' (client_num,devis_date,devis_montant,type_devis,statut_devis) VALUES(?,?,?,?,?)'); 
+            $statut = $req->execute([$_POST['client'],$devis_date,$_POST['montant'],'devis','En attente']);
+
+            if($statut){
+                $num_devis = $this->getDatabase()->lastInsertId();
+                $tab = $_POST['details'];
+                for($i=0;$i<sizeof($_POST['details']);$i++){
+                        if($tab[$i] != ''){
+                            $id_article = $tab[$i]['id_article'];
+                            $qte_article =  $tab[$i]['qte'];
+                            
+                        $req = $this->getDatabase()->prepare('INSERT INTO '.$this->table_details.' (detail_devis, details_ref, details_qte) VALUES (?,?,?)');
+                        $req->execute([$num_devis,$id_article,$qte_article]);
+                        }
+                    }
+                    if($req){
+                        return 'Le devis n°'.$num_devis.' est bien crée';
+                        }
+                }
+            }
+        }
+    
     // function calcul de prix selon l'id ref faire la verif du montant devis
     public function CalcPrix(){
         $id_ref= $_POST['id_ref'];

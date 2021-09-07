@@ -19,10 +19,10 @@
     <link rel="stylesheet" href="./tailwind.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <script src="./src/jquery-3.6.0.min.js"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.2.2/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <script src="./src/math.js" type="text/javascript"></script>  
-    <!-- <script src="js/prototype.js" type="text/javascript"></script>
-    <script src="js/default.js" type='text/javascript'></script> -->
+
 </head>
 <body>
     

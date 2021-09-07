@@ -1,37 +1,52 @@
-var adresse = 'http://localhost/testV4/src/fiche_client.php?client='
-var ajax = 'controller/vrac.php'
-// ******* Modal Start   *******
-      function toggleModal(modalID){
+
+var adresse = 'http://localhost/testV4/src/fiche_client.php?client=';
+var ajax = 'controller/vrac.php';
+var modal_id= 'modal_id';
+      function displayRecords(pageNum,categorie ) {
+        // $.ajax({
+        //     type: "POST",
+        //     url: "./vrac.php",
+        //     data: {action:'liste',categorie:'devis',show:numRecords,pageNum:pageNum},
+        //     cache: false,
+        //     success: function(html) {    
+        //         $("#results").html( html );
+        //         $('.loader').html('');
+        //         console.log(html.ref)
+        //     }
+        $('.loader').html('<img src="src/Infinity-loading.gif" alt="" width="24" height="24" >');
+            $.ajax({
+                type: "POST",
+                url: ajax,
+                data: {action:'liste',categorie:categorie,page:pageNum,pagination:'on'},
+                dataType:'JSON',
+                cache: false,
+    
+                success: function(data) { 
+                    if(data.html){
+                        $("#resultats").html(data.html);
+                    }   
+                    if(data.pagination){
+                        $("#pagination").html(data.pagination);
+                    }   
+                    $('.loader').html('');
+                }
+            });  
+    }
+    function toggleModal(modalID){
         $('#'+modalID).toggleClass("hidden");
         $('#'+modalID + "_backdrop").toggleClass("hidden");
         $('#'+modalID).toggleClass("flex");
         $('#'+modalID + "_backdrop").toggleClass("flex");
       };
-      
-      function displayRecords(numRecords, pageNum ) {
-        $.ajax({
-            type: "POST",
-            url: "./vrac.php",
-            data: {action:'liste',categorie:'devis',show:numRecords,pageNum:pageNum},
-            cache: false,
-            beforeSend: function () { 
-                $('.loader').html('<img src="loader.gif" alt="" width="24" height="24" >');
-            },
-            success: function(html) {    
-                $("#results").html( html );
-                $('.loader').html('');
-                console.log(html.ref)
-            }
-        });
-    }
-
-// tableau devis
+function ajoutElem(tab,elem){
+    [].push.call(tab,elem)
+}
+// tableau devis ( voir pour le faire en objet)
 var data=[];
 
 
 // ******* Modal End     *******
 $(document).ready(function(){
-
 
     // ecoute le document au niveau du dom si MAJ ('evenement''element id ou class''callback') 
 //  ******************  Index ******************
@@ -58,47 +73,25 @@ $(document).ready(function(){
                         });
                         break;
                     case 'liste_devis':
-                        displayRecords(10, 1);
+                        // displayRecords(10, 1);
                         break;
                     case 'devis':
-                        data.splice(0,data.length);
+                        // data.splice(0,data.length);
+                        data=[];
                     default:
                         break;
                 }
-
             });   
         });
     // ******* Menu End   *******
-    // ******* Modal Close Start Test     *******
-    $(document).on('click', '.close', function(){
-            var id= $(this).data('modal');
-            toggleModal(id);
-       });
+
 //  ******************  Client ******************
     // ******* Pagination tableau CLient Start *******
     $(document).on('click', '.displayRecords',function(){
         var pageNum = $(this).data('pagenum');
         var categorie =$(this).data('categorie');
-        console.log(pageNum)
-        $.ajax({
-            type: "POST",
-            url: ajax,
-            data: {action:'liste',categorie:categorie,page:pageNum,pagination:'on'},
-            dataType:'JSON',
-            cache: false,
-            beforeSend: function () { 
-                $('.loader').html('<img src="src/Infinity-loading.gif" alt="" width="24" height="24" >');
-            },
-            success: function(data) { 
-                if(data.html){
-                    $("#client").html(data.html);
-                }   
-                if(data.pagination){
-                    $("#pagination").html(data.pagination);
-                }   
-                $('.loader').html('');
-            }
-        })
+        console.log(pageNum);
+        displayRecords(pageNum,categorie );
     });
     // ******* Pagination tableau Client End   *******
     // ******* Barre de recherche *******
@@ -140,19 +133,41 @@ $(document).ready(function(){
     // ******* Function Delete End      *******
     // ******* Function Update Start    *******
         $(document).on('click','.update',function(){
-            var idClient= $(this).data('id'),
-                id = $(this).data("modal");
+//  faire sur référence
+            var id= $(this).data('id'),
+                categorie=$(this).data('categorie');
             $.ajax({
                 type: 'POST',
-                url: 'fonctions/modif.php',
-                data: {clientId:idClient},
+                url: ajax,
+                data: {info_client:id,action:'chercher',categorie:categorie},
+                dataType:'JSON',
                 success: function(data){
-                    $('#modal_content').html(data);
-                    toggleModal(id);
+                    if(typeof data === 'object'){
+                        for(var prop in data){
+                            if(isNaN(prop)){
+                                // alert(prop+' '+data[prop]);
+                                $('input[id=modal_form_'+prop+'],textarea[id=modal_form_'+prop+']').val(data[prop]);
+                            }
+                        }                        
+                        console.log(data);
+                        toggleModal(modal_id);
+                    }
                 }
-            })
+            });
+            // $.ajax({
+            //     type: 'POST',
+            //     url: 'views/info_client.php',
+            //     data: {info_client:id,action:'chercher',categorie:'clients'},
+            //     success: function(data){
+            //         $('#modal_content').html(data);
+            //     }
+            // })
         });
     // ******* Function Update End      *******
+    $(document).on('click', '.close', function(){
+        var id= $(this).data('modal');
+        toggleModal(id);
+   });
     // ******* Function Info Start      *******
         $(document).on('click','.info',function(){
             var idClient = $(this).data('id')
@@ -201,18 +216,11 @@ $(document).ready(function(){
                 }
                     $('#html').html(data.msg);
                     console.log(data.status)
-                    // if(data.status === 'ok'){
-                    //     $('#ajout_client').reset()
-                    // }
                 },
                 complete: function(){
                     console.log('c\'est fini')
                     $('form')[0].reset()
                 }
-                // .fail(function(xhr){
-                    //     alert('une erreur est survenue '+xhr);
-                    //     console.log(xhr)
-                    // });
                 });
             });
     // ******* Function Ajout End            *******
@@ -286,8 +294,7 @@ $(document).ready(function(){
         // 
         $(document).on('click','.result_client',function(){
             var id_client = $(this).data('client_devis')
-            // alert(id_client)
-            // console.log(id_client);
+            $('#id_client').val(id_client)
             $.ajax({
                 type: 'POST',
                 url: 'views/devis_client.php',
@@ -325,25 +332,28 @@ $(document).ready(function(){
                 var ref_qte_commande = $('#ref_qte_commande').val()
                 var ref_designation = $('#ref_designation').val()
                 var ref_prix_commande = parseFloat($('#ref_prix_commande').val())
-                $('#contenu_devis').append("<tr data-id_client='"+id_client+"'><td>"+id_article+"</td> <td>"+ref_designation+"</td><td class='text-indigo-600 font-bold'>"+ref_qte_commande+"</td><td class=' ref_prix_commande text-indigo-600 font-bold'>"+ref_prix_commande+"</td><td><button type='button' data-refcommande="+ref_prix_commande+"   class='bg-indigo-500 text-white w-16 rounded-md remove_row'>X</button></td></tr>")
+                $('#contenu_devis').append("<tr id='article_"+id_article+"'><td>"+id_article+"</td> <td>"+ref_designation+"</td><td class='text-indigo-600 font-bold'>"+ref_qte_commande+"</td><td class=' ref_prix_commande text-indigo-600 font-bold'>"+ref_prix_commande+"</td><td><button type='button' data-refcommande='"+ref_prix_commande+"'  data-id_article='"+id_article+"' class='bg-indigo-500 text-white w-16 rounded-md remove_row'>X</button></td></tr>")
                 // $('#id_client').val(id_client)
                 var total = parseFloat($('#total_commande').val())
                 total += ref_prix_commande
                 $('#total_commande').val(total.toFixed(2))
                 console.log(total)
                 var ligne ={id_article:id_article,qte:ref_qte_commande,ref_prix:ref_prix_commande};
-                data.push(ligne)
+                // //data.push(ligne)
+                data[id_article]=ligne;
+                // ajoutElem(data,{id_article:id_article,qte:ref_qte_commande,ref_prix:ref_prix_commande})
                 console.log(data)
              });
              // ******** Function Insert Tableau Devis Toiture End   *******
              // ******** Function Remove Ligne Tableau Devis Toiture Start   *******
              $(document).on('click','.remove_row',function(){
-                var montant = $(this).data('refcommande')
-                var total = parseFloat($('#total_commande').val())
+                var montant = $(this).data('refcommande');
+                var total = parseFloat($('#total_commande').val());
+                // Permet de recup l'id de l'article
+                var index=$(this).data('id_article');
+                data.splice(index,1);
+                
                 total -= montant
-                // console.log('prix'+$(this).data('refcommande'))
-                // console.log(typeof montant +' ref_commande')
-                // console.log(typeof total +' '+total)
                 $('#total_commande').val(total.toFixed(2))
                 $(this).closest('tr').remove()
              });
@@ -401,8 +411,16 @@ $(document).ready(function(){
              // ******** Function Select choix Tableau Devis Toiture End    *******
              // ******** Function Validation Tableau Devis Toiture Start    *******
              $(document).on('click','#valide_devis_btn',function(){
-                var tab = $(this).data('client')
-                console.log(tab)
+                var tot = $('#total_commande').val();
+                var client =$('#id_client').val();
+                $.ajax({
+                    type : 'POST',
+                    url: 'controller/vrac.php',
+                    data:{action:'ajout',categorie:'devis',details:data,montant:tot,client:client},
+                    success: function(data){
+                        console.log(data)
+                    }
+                });
              });
              // ******** Function Validation Tableau Devis Toiture End      *******
              // ******** Function Pagination Liste Devis Start    *******
@@ -419,6 +437,7 @@ $(document).ready(function(){
                     data:{action:'details',categorie:'devis',devis_num:devis_num},
                     success: function(data){
                         $('.page-content').html(data)
+                        $(this).data('id_client').attr(client_num);
                     }
                 });
              });
@@ -443,7 +462,26 @@ $(document).ready(function(){
         }
     });
     // ******* Barre de recherche END   *******
-    
+    // Modification devis Start
+    // cette ligne permet d'éxécuter une seule fois le trigger
+    $(document).on('click','.update_devis',function(){
+        var id =$(this).data('modal'); 
+        var devis = $(this).data('id')
+        $.ajax({
+            type: 'POST',
+            url: 'views/modification_devis.php',
+            data:{action:'details',categorie:'devis',id_ref:devis},
+            success:function(data){
+                $('#modal_content').html(data);
+                toggleModal(id);
+        }
+        })
+        console.log('update_devis')
+    });
+    $(document).on('click','.modification_devis',function(){
+        
+    });
+    // Modification devis End
 //  ************************************  References ************************************
             //  Modal modification
 

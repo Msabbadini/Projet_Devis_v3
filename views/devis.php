@@ -130,7 +130,7 @@ global $References;
           <div  class="px-4 py-3 bg-gray-50 text-left sm:px-6">
             <input type="hidden" name="id_client" value='' id='id_client'>
             <label class="total_commande text-indigo-500 text-lg font-semibold col-span-2">Total Commande : </label>
-            <input type='number' id="total_commande" class='bg-indigo-500 text-white font-bold rounded-md pl-3' value='0' readonly>
+            <input type='number' id="total_commande" name='total_commande' class='bg-indigo-500 text-white font-bold rounded-md pl-3' value='0' readonly>
             <button type="button" id='valide_devis_btn' class="inline-flex justify-end py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
               Validation Devis
             </button>          

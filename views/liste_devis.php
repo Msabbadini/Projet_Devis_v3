@@ -40,7 +40,7 @@ global $Devis
                                 <th class="px-6 py-3 border-b-2 border-gray-300"></th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white" id='client'>
+                        <tbody class="bg-white" id='resultats'>
                             <?php
                             $data = $Devis->Liste();
                             include_once './view_liste_devis.php'

@@ -16,11 +16,20 @@
       </div>
       <!--body-->
       <div id='modal_content' class="relative p-6 flex-auto">
-
+      <?php 
+        if(isset($modal_content) && !empty($modal_content)){
+          $nom_modal='modals/modal_'.$modal_content.'.php';
+            if(file_exists($nom_modal)){
+              include $nom_modal;
+            }else{
+              echo 'page introuvable';
+            }
+        }
+      ?>
       </div>
       <!--footer-->
       <div class="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-        <button data-modal='modal_id' class="close text-white bg-indigo-600 hover:bg-red-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"  type="button">
+        <button data-modal='modal_id' class="close text-white bg-indigo-600 hover:bg-red-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" rel="modal:close"  type="button">
           Fermer
         </button>
         <button id='modif' class=" text-white bg-indigo-600 hover:bg-green-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="submit" >
