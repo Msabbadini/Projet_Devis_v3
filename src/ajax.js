@@ -3,16 +3,6 @@ var adresse = 'http://localhost/testV4/src/fiche_client.php?client=';
 var ajax = 'controller/vrac.php';
 var modal_id= 'modal_id';
       function displayRecords(pageNum,categorie ) {
-        // $.ajax({
-        //     type: "POST",
-        //     url: "./vrac.php",
-        //     data: {action:'liste',categorie:'devis',show:numRecords,pageNum:pageNum},
-        //     cache: false,
-        //     success: function(html) {    
-        //         $("#results").html( html );
-        //         $('.loader').html('');
-        //         console.log(html.ref)
-        //     }
         $('.loader').html('<img src="src/Infinity-loading.gif" alt="" width="24" height="24" >');
             $.ajax({
                 type: "POST",
@@ -20,7 +10,6 @@ var modal_id= 'modal_id';
                 data: {action:'liste',categorie:categorie,page:pageNum,pagination:'on'},
                 dataType:'JSON',
                 cache: false,
-    
                 success: function(data) { 
                     if(data.html){
                         $("#resultats").html(data.html);
@@ -136,43 +125,70 @@ $(document).ready(function(){
 //  faire sur référence
             var id= $(this).data('id'),
                 categorie=$(this).data('categorie');
-            $.ajax({
-                type: 'POST',
-                url: ajax,
-                data: {info_client:id,action:'chercher',categorie:categorie},
-                dataType:'JSON',
-                success: function(data){
-                    if(typeof data === 'object'){
-                        for(var prop in data){
-                            if(isNaN(prop)){
-                                // alert(prop+' '+data[prop]);
-                                $('input[id=modal_form_'+prop+'],textarea[id=modal_form_'+prop+']').val(data[prop]);
+                $('#update_client').attr('data-id_client',id);        
+                $.ajax({
+                    type: 'POST',
+                    url: ajax,
+                    data: {info_client:id,action:'chercher',categorie:categorie},
+                    dataType:'JSON',
+                    success: function(data){
+                        if(typeof data === 'object'){
+                            for(var prop in data){
+                                // if(isNaN(prop)){
+                                    // alert(prop+' '+data[prop]);
+                                    // prop c'est la key des données et data(prop) c'est la valeur associée
+                                    $('input[id=modal_form_'+prop+'],textarea[id=modal_form_'+prop+']').val(data[prop]);
+                                    $('select[id=modal_form_'+prop+'] option[value="'+data[prop]+'"]').attr('selected', true)
+                                    // }
+                                }                
+                                console.log(data);
+                                toggleModal(modal_id);
                             }
-                        }                        
-                        console.log(data);
-                        toggleModal(modal_id);
-                    }
                 }
             });
-            // $.ajax({
-            //     type: 'POST',
-            //     url: 'views/info_client.php',
-            //     data: {info_client:id,action:'chercher',categorie:'clients'},
-            //     success: function(data){
-            //         $('#modal_content').html(data);
-            //     }
-            // })
+
         });
     // ******* Function Update End      *******
+    // ******* Function Update données Start    *******
+    $(document).on('click','#modif',function(){
+        var donnees=$('#update_client').serialize();
+        console.log(donnees);
+        $.ajax({
+            type:'POST',
+            url: ajax,
+            data:$('#update_client').serialize(),
+            dataType:'JSON',
+            success:function(data){
+                $('.error').html('')
+                data = jQuery.parseJSON(data)
+               console.log(data)
+               if(data.status === 'error'){
+                   console.log('ok');
+                   if(data.error){
+                       for(var prop in data.error){
+                           $('#'+prop+'-error').html(data.error[prop]);
+                       }
+                   }
+                }
+                $('#status').html(data.msg);
+                console.log(data.status);
+        }
+        });
+    });
+    // ******* Function Update données End      *******
+
+    // ******* Function Close modal Start      *******
     $(document).on('click', '.close', function(){
         var id= $(this).data('modal');
         toggleModal(id);
-   });
+    });
+    // ******* Function Close modal End      *******
+    
     // ******* Function Info Start      *******
         $(document).on('click','.info',function(){
-            var idClient = $(this).data('id')
-            $('.page-content').load('views/info.php')
-            console.log(idClient)
+            var idClient = $(this).data('id');
+            $('.page-content').load('views/info.php');
+            console.log(idClient);
             $.ajax({
                 type: 'POST',
                 url: 'views/info_client.php',
@@ -207,7 +223,7 @@ $(document).ready(function(){
                  data = jQuery.parseJSON(data)
                 console.log(data)
                 if(data.status === 'error'){
-                    console.log('ok')
+                    console.log('ok');
                     if(data.error){
                         for(var prop in data.error){
                             $('#'+prop+'-error').html(data.error[prop]);

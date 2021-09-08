@@ -194,6 +194,7 @@
         elseif(isset($_POST['info_client'])){
             $id=$_POST['info_client'];
             $req2 = $this->getDatabase()-> prepare('SELECT * FROM clients WHERE id_client= ?');
+            // $req2->setFetchMode(PDO::FETCH_ASSOC);
             $req2 -> execute([$id]);
             $data= $req2-> fetchAll();
             return $data;
@@ -201,6 +202,90 @@
         return false;
     }
     //*************************  FUNCTION CHERCHER CLIENT END       **************************
+    //*************************  FUNCTION MODIFIER CLIENT START       **************************
+    function Modifier(){
+
+            $nom=htmlspecialchars($_POST['nom']);
+            $prenom=htmlspecialchars($_POST['prenom']);
+            $genre=htmlspecialchars($_POST['genre']);
+            $mail=htmlspecialchars($_POST['email']);
+            $info=htmlspecialchars($_POST['info_complementaire']);
+            $telPortalble=htmlspecialchars($_POST['telephone_portable']);
+            $telFixe=htmlspecialchars($_POST['telephone_fixe']);
+            $adresse=htmlspecialchars($_POST['adresse_postal']);
+            $code_postal=htmlspecialchars($_POST['code_postal']);
+            $ville=htmlspecialchars($_POST['ville']);
+            $id=htmlspecialchars($_POST['id_client']);
+            $ret = array(); // on définit un tableau qui contiendra toutes nos valeurs retour
+            $ret['status'] = 'ok'; // on définit une valeur de retour qui nous permettra de savoir si tout s'est bien passé
+
+            if(!isset($genre) || empty($genre)){
+                $ret['error']['genre'] = "Veuillez indiquer une civilité"; // on enregistre notre message d'erreur
+                $ret['status'] = 'error'; // on met la valeur de retour à 'error' comme ça on sait qu'il y a une erreur
+            
+            };
+            if(!isset($prenom) || empty($prenom)){
+                $ret['error']['prenom'] = "Votre prénom est obligatoire"; // on enregistre notre message d'erreur
+                $ret['status'] = 'error'; // on met la valeur de retour à 'error' comme ça on sait qu'il y a une erreur
+            };
+    
+            if(!isset($nom) || empty($nom)){
+                $ret['error']['nom'] = "Le nom du client est obligatoire"; // on enregistre notre message d'erreur
+                $ret['status'] = 'error'; // on met la valeur de retour à 'error' comme ça on sait qu'il y a une erreur
+            };
+            
+            
+            if(!isset($mail) || empty($mail)){
+                $ret['error']['email'] = 'Votre adresse mail n\' est pas valide ';
+                $ret['status'] = 'error';
+            };
+            if(!filter_var($mail,FILTER_VALIDATE_EMAIL)){
+                $ret['error']['email'] = 'Votre adresse mail n\' est pas valide ';
+                $ret['status'] = 'error';	
+            };
+            
+            if(!isset($adresse) || empty($adresse)){
+                $ret['error']['adresse'] = 'Veuillez indiquer une adresse ';
+                $ret['status'] = 'error';
+            };
+            if(!isset($code_postal) || empty($code_postal)){
+                $ret['error']['code_postal'] = 'Veuillez indiquer un code postal ';
+                $ret['status'] = 'error';
+            };
+            if(!isset($ville) || empty($ville)){
+                $ret['error']['ville'] = 'Veuillez indiquer une ville ';
+                $ret['status'] = 'error';
+            };
+            
+            if(!empty($telFixe)){
+                if(!is_numeric($telFixe)){
+                $ret['error']['tel'] = 'Votre numéro de téléphone fixe n\'est pas valide';
+                $ret['status'] = 'error';
+                };
+            };
+            
+            if(!empty($telPortalble)){
+               if(!is_numeric($telPortalble)){
+                $ret['error']['telephone_portable'] = 'Votre numéro de téléphone portable n\'est pas valide';
+                $ret['status'] = 'error';
+                };
+            };
+                        
+            if($ret['status'] == 'ok'){
+            $ret['msg'] = "<span style='color:green'>Votre ajout client est bien pris en compte</span>";
+            } else {
+            $ret['msg'] = "<span style='color:red'>Corriger les erreurs pour pouvoir continuer</span>";
+            };
+            
+            if($ret['status'] == 'ok'){
+                $req = $this->getDatabase()->prepare('UPDATE '.$this->table_client.' SET civilite_client=?,nom_client=?,prenom_client=?,adresse_postal=?,code_postal=?,ville_client=?,email_client=?,telephone_fixe_client=?,telephone_portable_client=?,infos_complementaire=? WHERE id_client=? ');
+                $req-> execute([$genre,$nom,$prenom,$adresse,$code_postal,$ville,$mail,$telFixe,$telPortalble,$info,$id]);
+                
+            }
+            return $ret ;
+
+    }
+    //*************************  FUNCTION MODIFIER CLIENT END         **************************
 
 };
 // ************************************************************ FUNCTION CRUD END ***********************************************************

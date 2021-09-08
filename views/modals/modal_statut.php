@@ -8,14 +8,14 @@
         <h3 class="text-3xl font-semibold">
           Modification
         </h3>
-        <button class="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal('modal-id')">
+        <button class="close p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" >
           <span class=" bg-black  opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
           <i class="uil uil-times-square"></i>
           </span>
         </button>
       </div>
       <!--body-->
-      <div id='modal_content' class="relative p-6 flex-auto">
+      <div id='modal_content' class="relative  flex-auto">
       <?php 
         if(isset($modal_content) && !empty($modal_content)){
           $nom_modal='modals/modal_'.$modal_content.'.php';
@@ -29,6 +29,8 @@
       </div>
       <!--footer-->
       <div class="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                <div id="status"></div>
+
         <button data-modal='modal_id' class="close text-white bg-indigo-600 hover:bg-red-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" rel="modal:close"  type="button">
           Fermer
         </button>

@@ -33,6 +33,7 @@ abstract class DB{
 
         self::$database = new PDO('mysql:host='.self::HOST.';dbname='.self::DB,self::USER,self::PWD,[PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8']);
         self::$database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+        self::$database->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     }
 
     // singleton

@@ -1,12 +1,16 @@
-<form id='ajout_client' method='post'>
+<form id='update_client'  method='post'>
         <div class="shadow overflow-hidden sm:rounded-md">
           <div class="px-4 py-5 bg-gray-200 sm:p-6">
             <div class="grid grid-cols-6 gap-6">
+            <div class="col-span-2  sm:col-span-3">
+            <label class="block text-sm font-medium text-gray-700">Numéro Client</label>
+            <input id='modal_form_id_client' type="text" name="id_client"  autocomplete="Nom du client" class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value=''>
+            </div>
             <div class="col-span-6 sm:col-span-3">
                 <label class="block text-sm font-medium text-gray-700">Civilité</label>
                 <span id="genre-error" class=" text-indigo-500"></span>
 
-                <select  name="genre" autocomplete="civilité" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm">
+                <select id='modal_form_civilite_client' name="genre" autocomplete="civilité" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm">
                   <option value="">Choisir Civilité</option>
                   <option value="Monsieur">Monsieur</option>
                   <option value='Madame'>Madame</option>
@@ -71,7 +75,7 @@
             </div>
           </div>
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <input type="text" class="hidden" name='action' value='ajout'>
+            <input type="text" class="hidden" name='action' value='modifier'>
             <input type="text" class="hidden" name='categorie' value='clients'>
           </div>
         </div>
