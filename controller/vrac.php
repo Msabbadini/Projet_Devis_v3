@@ -1,7 +1,16 @@
 <?php
+session_start();
+header('Content-Type: application/json');
+require_once '../modeles/login.class.php';
 require_once '../modeles/client.class.php';
 require_once '../modeles/devis.class.php';
 require_once '../modeles/reference.class.php';
+require_once '../modeles/jwt.class.php';
+$obj2 =new JWT();
+$obj3 = new Login();
+
+if(isset($_SESSION['connect']) && $obj3->VerifTokenValidity() == 'true'){
+
     if(isset($_POST['action']) && !empty($_POST['action']) && isset($_POST['categorie']) && !empty($_POST['categorie'])){
         // Pas d'accolade car j'ai un seul élément  pour la condition 
         if($_POST['categorie'] == 'clients') $obj = new Client();
@@ -14,6 +23,7 @@ require_once '../modeles/reference.class.php';
         elseif($_POST['action'] == 'modifier') $ret = $obj->Modifier();
         elseif($_POST['action'] == 'Supprimer') $ret = $obj->Supprimer();
         elseif($_POST['action'] == 'liste') $ret =  $obj->Liste(true);
+        elseif($_POST['action'] == 'liste') $ret =  $obj->ListeInfo(true);
         elseif($_POST['action'] == 'chercher') $ret = $obj->Chercher();
         elseif($_POST['action'] == 'details') $ret = $obj->Details();
            
@@ -23,14 +33,22 @@ require_once '../modeles/reference.class.php';
             $ret['pagination']=Pagination($nombre,$_POST['categorie'],$page);
         }
     }
-    // Utilisable si je met du JSON 
-
-    if(is_array($ret)){
-        if(isset($ret[0])){
-            $ret=$ret[0];
-        }
-        echo json_encode($ret);  
+    if($ret !=''){
+        $verif=$obj3->verifSession();
+        if($verif){
+                $payload =['login'=>$_SESSION["pseudo"],'key'=>$_SESSION["key"]];
+                $token = $obj2->generate($payload);
+                $_SESSION['Owl'] = $token;
+                setcookie('bear',$token);
+                if(is_array($ret)){
+                    // var_dump($ret);
+                    if(isset($ret[0])){
+                        $ret=$ret[0];
+                    }
+                    echo json_encode([$ret,'token'=>$token]); 
+                }
+            }
     }else echo $ret;
    die;
-   
+}  
 ?>

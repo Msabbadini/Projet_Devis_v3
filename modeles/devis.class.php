@@ -69,15 +69,39 @@
     }
 
     function Nombre(){
-        $result= $this->getDatabase()->prepare('SELECT count(*) FROM '.$this->table_devis);
+        $result= $this->getDatabase()->prepare('SELECT count(*) AS nb FROM '.$this->table_devis);
         $result->execute();
         $data =$result->fetch();
-        if($data && isset($data[0]) && is_numeric($data[0])){
-            return $data[0];
+        if($data && isset($data['nb']) && is_numeric($data['nb'])){
+            return $data['nb'];
         }
         return 0;
     }
 
+    public function ListeInfo($html=false){
+        $endSql='';
+        if(isset($_POST['page']) && is_numeric($_POST['page']) && $_POST['page'] > 1){
+            // calcul de l'offset numéro de page -1
+            $offset = ($_POST['page']-1)*LIMIT;
+            $endSql='OFFSET '.$offset;
+        }
+        $result= $this->getDatabase()->prepare('SELECT * FROM '.$this->table_devis.' INNER JOIN '.$this->table_client .' on client_num = id_client WHERE client_num =? LIMIT '.LIMIT.' '.$endSql );
+        $result->execute();
+        $data =$result->fetchAll();
+        if($data && is_array($data)){
+            $tab=[];
+            if($html){
+                ob_start();
+                include_once '../views/view_liste_devis.php';
+                $tab['html']=ob_get_contents();
+                ob_end_clean();
+                return $tab;
+            }
+            return $data;
+        }
+        return false;
+
+    }
     public function Chercher(){
         if(isset($_POST['id_ref'])){
             $id_ref=$_POST['id_ref'];

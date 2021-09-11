@@ -25,7 +25,7 @@ function Pagination($nombre_total,$categorie,$page=1){
         $next_link = '';
 
         $page_link = '';
-
+        $page_array= [];
         if($last_page > 4)
         {
             if($page < 5)

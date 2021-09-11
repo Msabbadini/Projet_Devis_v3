@@ -8,7 +8,7 @@
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,13 +16,13 @@
     <title><?= $titre?></title>
     <meta name="description" content="Gestion Client ETS Thibaud">
     <link rel="stylesheet" href="./design/default.css">
-    <link rel="stylesheet" href="./tailwind.css">
+    <link rel="stylesheet" href="./design/tailwindCss/tailwind.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <script src="./src/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
-    <script src="./src/math.js" type="text/javascript"></script>  
-
+    <script src="./src/Js/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" /> -->
+    <script src="./src/Js/math.js" type="text/javascript"></script>  
+    <script src="./src/Js/jquery.loadTemplate.js"></script>
 </head>
 <body>
     

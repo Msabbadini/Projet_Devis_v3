@@ -1,8 +1,10 @@
 
 var adresse = 'http://localhost/testV4/src/fiche_client.php?client=';
 var ajax = 'controller/vrac.php';
+var securite = 'controller/securite.php';
 var modal_id= 'modal_id';
-      function displayRecords(pageNum,categorie ) {
+
+    function displayRecords(pageNum,categorie ) {
         $('.loader').html('<img src="src/Infinity-loading.gif" alt="" width="24" height="24" >');
             $.ajax({
                 type: "POST",
@@ -11,13 +13,15 @@ var modal_id= 'modal_id';
                 dataType:'JSON',
                 cache: false,
                 success: function(data) { 
-                    if(data.html){
-                        $("#resultats").html(data.html);
+                    console.log(data)
+                    if(data[0].html){
+                        $("#resultats").html(data[0].html);
                     }   
-                    if(data.pagination){
-                        $("#pagination").html(data.pagination);
+                    if(data[0].pagination){
+                        $("#pagination").html(data[0].pagination);
                     }   
                     $('.loader').html('');
+                    RefreshToken(data.token);
                 }
             });  
     }
@@ -27,8 +31,12 @@ var modal_id= 'modal_id';
         $('#'+modalID).toggleClass("flex");
         $('#'+modalID + "_backdrop").toggleClass("flex");
       };
+
 function ajoutElem(tab,elem){
     [].push.call(tab,elem)
+}
+function RefreshToken(newToken){
+     token = $("#OwlToken").val(newToken);
 }
 // tableau devis ( voir pour le faire en objet)
 var data=[];
@@ -36,7 +44,11 @@ var data=[];
 
 // ******* Modal End     *******
 $(document).ready(function(){
-
+    // setup du token pour les requetes ajax
+    $.ajaxPrefilter(function (options, originalOptions, jqXHR){
+        var token = $("#OwlToken").val();
+        jqXHR.setRequestHeader('JWT-Token', token);
+    });
     // ecoute le document au niveau du dom si MAJ ('evenement''element id ou class''callback') 
 //  ******************  Index ******************
     // ******* Menu Start *******
@@ -54,15 +66,16 @@ $(document).ready(function(){
                                 action:action,
                                 categorie:cat
                             },
-                            datatype: 'html',
+                            dataType: 'JSON',
                             success: function(data){
-                                // console.log(data)
-                                // $('#client').html(data);
+                                RefreshToken(data.token);
+                                console.log(data);
                             }
                         });
                         break;
                     case 'liste_devis':
                         // displayRecords(10, 1);
+
                         break;
                     case 'devis':
                         // data.splice(0,data.length);
@@ -80,7 +93,10 @@ $(document).ready(function(){
         var pageNum = $(this).data('pagenum');
         var categorie =$(this).data('categorie');
         console.log(pageNum);
-        displayRecords(pageNum,categorie );
+        displayRecords(pageNum,categorie );  
+
+        // console.log(displayRecords(pageNum,categorie));
+        // displayRecords(pageNum,categorie );
     });
     // ******* Pagination tableau Client End   *******
     // ******* Barre de recherche *******
@@ -93,6 +109,7 @@ $(document).ready(function(){
                 url: 'views/recherche_client.php',
                 data: {action:'chercher',categorie:'clients',client:client},
                 success:function(data){
+                    console.log(data)
                     if(data !=''){
                         $('#result_recherche').html(data);
                     }else{
@@ -113,8 +130,8 @@ $(document).ready(function(){
                     url: ajax,
                     data: {action:'Supprimer',categorie:'clients',client:idClient},
                     success: function(data){
-                        console.log(data)
                         $('#'+idClient).remove();
+                        RefreshToken(data.token);
                     }
                 })
             }
@@ -125,24 +142,23 @@ $(document).ready(function(){
 //  faire sur référence
             var id= $(this).data('id'),
                 categorie=$(this).data('categorie');
-                $('#update_client').attr('data-id_client',id);        
+                $('#update_client').attr('data-id_client',id);
+                $('#status').html('');     
                 $.ajax({
                     type: 'POST',
                     url: ajax,
                     data: {info_client:id,action:'chercher',categorie:categorie},
                     dataType:'JSON',
                     success: function(data){
-                        if(typeof data === 'object'){
-                            for(var prop in data){
-                                // if(isNaN(prop)){
-                                    // alert(prop+' '+data[prop]);
+                        if(typeof data[0] === 'object'){
+                            for(var prop in data[0]){
                                     // prop c'est la key des données et data(prop) c'est la valeur associée
-                                    $('input[id=modal_form_'+prop+'],textarea[id=modal_form_'+prop+']').val(data[prop]);
-                                    $('select[id=modal_form_'+prop+'] option[value="'+data[prop]+'"]').attr('selected', true)
-                                    // }
+                                    $('input[id=modal_form_'+prop+'],textarea[id=modal_form_'+prop+']').val(data[0][prop]);
+                                    $('select[id=modal_form_'+prop+'] option[value="'+data[0][prop]+'"]').attr('selected', true)
                                 }                
                                 console.log(data);
                                 toggleModal(modal_id);
+                                RefreshToken(data.token);
                             }
                 }
             });
@@ -151,27 +167,26 @@ $(document).ready(function(){
     // ******* Function Update End      *******
     // ******* Function Update données Start    *******
     $(document).on('click','#modif',function(){
-        var donnees=$('#update_client').serialize();
-        console.log(donnees);
+        $('#status').html('');
         $.ajax({
             type:'POST',
             url: ajax,
             data:$('#update_client').serialize(),
             dataType:'JSON',
             success:function(data){
-                $('.error').html('')
-                data = jQuery.parseJSON(data)
+                $('.error').html('');
                console.log(data)
-               if(data.status === 'error'){
+               if(data[0].status === 'error'){
                    console.log('ok');
-                   if(data.error){
-                       for(var prop in data.error){
-                           $('#'+prop+'-error').html(data.error[prop]);
+                   if(data[0].error){
+                       for(var prop in data[0].error){
+                           $('#'+prop+'-error').html(data[0].error[prop]);
                        }
                    }
                 }
-                $('#status').html(data.msg);
-                console.log(data.status);
+                $('#status').html(data[0].msg);
+                console.log(data[0].status);
+                RefreshToken(data.token);
         }
         });
     });
@@ -192,10 +207,11 @@ $(document).ready(function(){
             $.ajax({
                 type: 'POST',
                 url: 'views/info_client.php',
-                data: {action:'chercher',categorie:'clients',info_client:idClient},
+                data: {action:'chercher',categorie:'clients',info_client_2:idClient},
                 success:function(data){
                     // console.log(data);
                     $('#info_client').html(data);
+                    RefreshToken(data.token);
                 }
             });
             $.ajax({
@@ -211,31 +227,31 @@ $(document).ready(function(){
     // ******* Function Info End        *******
     // ******* Function Ajout Start     *******
         $(document).on('click','#ajout_client_btn',function(e){
-        // $('#ajout_client_btn').submit(function(e){            
             e.preventDefault();
             $.ajax({
                 url: ajax,
                 data: $('#ajout_client').serialize(),
                 type: 'POST',
-                datatype: 'JSON',
+                dataType: 'JSON',
                 success: function(data){
                     $('.error').html('')
-                 data = jQuery.parseJSON(data)
+                //  data = jQuery.parseJSON(data)
                 console.log(data)
-                if(data.status === 'error'){
+                if(data[0].status === 'error'){
                     console.log('ok');
-                    if(data.error){
-                        for(var prop in data.error){
-                            $('#'+prop+'-error').html(data.error[prop]);
+                    if(data[0].error){
+                        for(var prop in data[0].error){
+                            $('#'+prop+'-error').html(data[0].error[prop]);
                         }
                     }
                 }
-                    $('#html').html(data.msg);
-                    console.log(data.status)
+                    $('#html').html(data[0].msg);
+                    console.log(data[0].status)
                 },
                 complete: function(){
                     console.log('c\'est fini')
                     $('form')[0].reset()
+                    RefreshToken(data.token);
                 }
                 });
             });
@@ -343,13 +359,21 @@ $(document).ready(function(){
         // Retours:
         //     [type]: [description]
              $(document).on('click','#ajout_ref_btn',function(){
-                var id_client = $(this).data('client_id')
+                // var id_client = $(this).data('client_id')
                 var id_article = $('#ref_id_ref').val()
                 var ref_qte_commande = $('#ref_qte_commande').val()
                 var ref_designation = $('#ref_designation').val()
                 var ref_prix_commande = parseFloat($('#ref_prix_commande').val())
-                $('#contenu_devis').append("<tr id='article_"+id_article+"'><td>"+id_article+"</td> <td>"+ref_designation+"</td><td class='text-indigo-600 font-bold'>"+ref_qte_commande+"</td><td class=' ref_prix_commande text-indigo-600 font-bold'>"+ref_prix_commande+"</td><td><button type='button' data-refcommande='"+ref_prix_commande+"'  data-id_article='"+id_article+"' class='bg-indigo-500 text-white w-16 rounded-md remove_row'>X</button></td></tr>")
+                // $('#contenu_devis').append("<tr id='article_"+id_article+"'><td>"+id_article+"</td> <td>"+ref_designation+"</td><td class='text-indigo-600 font-bold'>"+ref_qte_commande+"</td><td class=' ref_prix_commande text-indigo-600 font-bold'>"+ref_prix_commande+"</td><td><button type='button' data-refcommande='"+ref_prix_commande+"'  data-id_article='"+id_article+"' class='bg-indigo-500 text-white w-16 rounded-md remove_row'>X</button></td></tr>")
                 // $('#id_client').val(id_client)
+                $('<tr class="article_fixe"/>').loadTemplate($("#template_tab"), {
+                    id_article: id_article,
+                    ref_designation: ref_designation,
+                    ref_qte:ref_qte_commande,
+                    ref_prix:ref_prix_commande,
+                    ref_commande:ref_prix_commande
+                }).appendTo($("#contenu_devis"));
+
                 var total = parseFloat($('#total_commande').val())
                 total += ref_prix_commande
                 $('#total_commande').val(total.toFixed(2))
@@ -367,9 +391,11 @@ $(document).ready(function(){
                 var total = parseFloat($('#total_commande').val());
                 // Permet de recup l'id de l'article
                 var index=$(this).data('id_article');
-                data.splice(index,1);
-                
+                data.splice(index,1);  
                 total -= montant
+                if(total == null){
+                    total=0;
+                }
                 $('#total_commande').val(total.toFixed(2))
                 $(this).closest('tr').remove()
              });
@@ -385,9 +411,8 @@ $(document).ready(function(){
                     type: 'POST',
                     url: ajax,
                     data:{action:'chercher',categorie:'devis',id_ref:choix},
-                    datatype: 'JSON',
+                    dataType: 'JSON',
                     success: function(data){
-                        data = jQuery.parseJSON(data)
                         console.log(data)
                         for(var prop in data.ref){
                             $('#ref_'+prop).val(data.ref[prop]);
@@ -498,7 +523,17 @@ $(document).ready(function(){
         
     });
     // Modification devis End
-//  ************************************  References ************************************
-            //  Modal modification
+    $(document).on('click','.deco',function(){
+        $.ajax({
+            type:'POST',
+            url: securite,
+            data:{deco:1},
+            success:function(data){
+                window.location = "http://localhost/testV4/login.php";
+                console.log(data);
+            }
+        });
+    });
+
 
 })

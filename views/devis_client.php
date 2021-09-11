@@ -1,9 +1,9 @@
 <?php
 require_once '../modeles/client.class.php';
 global $Clients;
-$data = $Clients->Chercher();
-if($data){
-        foreach($data as $d){ ?>
+$d = $Clients->Chercher();
+if($d){
+        // foreach($data as $d){ ?>
               <div class="col-span-6 ">
 
                 <label class="block text-sm font-medium text-gray-700">Client</label>
@@ -37,6 +37,6 @@ if($data){
                 <input type="text" name="telephone_portable" value='<?=$d['telephone_portable_client']?>' autocomplete="Téléphone Portable" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
               </div>
 <?php        
-        }
+        // }
     }
 ?>

@@ -16,6 +16,8 @@ abstract class DB{
     protected  $table_fournisseur;
     protected  $table_reference;
     protected  $table_details;
+    protected  $table_login;
+    protected  $table_tentative;
     
     function __construct(){
         $this->table_client = 'clients';
@@ -23,6 +25,8 @@ abstract class DB{
         $this->table_fournisseur = 'fournisseur';
         $this->table_reference = 'articles';
         $this->table_details = 'detail';
+        $this->table_login = 'login';
+        $this->table_tentative = 'tentative';
     }
 
     private static $database;

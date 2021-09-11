@@ -47,6 +47,12 @@
       </li>
       <li class='hover:text-red-600 hover:bg-blue-100 rounded menu'>
         <span>Richardson</span>
+      </li>
+      <li class='menu-heading'>
+        <h3>Options</h3>
+      </li>
+      <li class='hover:text-red-600 hover:bg-blue-100 rounded deco'>
+        <span>Déconnexion</span>
       </li>  
     </ul>
   </nav>

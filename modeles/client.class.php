@@ -152,11 +152,11 @@
         return false;
     }
     function Nombre(){
-        $result= $this->getDatabase()->prepare('SELECT count(*) FROM '.$this->table_client);
+        $result= $this->getDatabase()->prepare('SELECT count(*) as nb FROM '.$this->table_client);
         $result->execute();
         $data =$result->fetch();
-        if($data && isset($data[0]) && is_numeric($data[0])){
-            return $data[0];
+        if($data && isset($data['nb']) && is_numeric($data['nb'])){
+            return $data['nb'];
         }
         return 0;
     }
@@ -196,6 +196,13 @@
             $req2 = $this->getDatabase()-> prepare('SELECT * FROM clients WHERE id_client= ?');
             // $req2->setFetchMode(PDO::FETCH_ASSOC);
             $req2 -> execute([$id]);
+            $data= $req2-> fetch();
+            return $data;
+        }elseif(isset($_POST['info_client_2'])){
+            $id=$_POST['info_client_2'];
+            $req2 = $this->getDatabase()-> prepare('SELECT * FROM clients WHERE id_client= ?');
+            // $req2->setFetchMode(PDO::FETCH_ASSOC);
+            $req2 -> execute([$id]);
             $data= $req2-> fetchAll();
             return $data;
         }
@@ -222,7 +229,6 @@
             if(!isset($genre) || empty($genre)){
                 $ret['error']['genre'] = "Veuillez indiquer une civilité"; // on enregistre notre message d'erreur
                 $ret['status'] = 'error'; // on met la valeur de retour à 'error' comme ça on sait qu'il y a une erreur
-            
             };
             if(!isset($prenom) || empty($prenom)){
                 $ret['error']['prenom'] = "Votre prénom est obligatoire"; // on enregistre notre message d'erreur
@@ -234,11 +240,11 @@
                 $ret['status'] = 'error'; // on met la valeur de retour à 'error' comme ça on sait qu'il y a une erreur
             };
             
-            
             if(!isset($mail) || empty($mail)){
                 $ret['error']['email'] = 'Votre adresse mail n\' est pas valide ';
                 $ret['status'] = 'error';
             };
+
             if(!filter_var($mail,FILTER_VALIDATE_EMAIL)){
                 $ret['error']['email'] = 'Votre adresse mail n\' est pas valide ';
                 $ret['status'] = 'error';	
@@ -248,10 +254,12 @@
                 $ret['error']['adresse'] = 'Veuillez indiquer une adresse ';
                 $ret['status'] = 'error';
             };
+
             if(!isset($code_postal) || empty($code_postal)){
                 $ret['error']['code_postal'] = 'Veuillez indiquer un code postal ';
                 $ret['status'] = 'error';
             };
+
             if(!isset($ville) || empty($ville)){
                 $ret['error']['ville'] = 'Veuillez indiquer une ville ';
                 $ret['status'] = 'error';
@@ -272,7 +280,7 @@
             };
                         
             if($ret['status'] == 'ok'){
-            $ret['msg'] = "<span style='color:green'>Votre ajout client est bien pris en compte</span>";
+            $ret['msg'] = "<span style='color:green'>Votre Modification client est bien prise en compte</span>";
             } else {
             $ret['msg'] = "<span style='color:red'>Corriger les erreurs pour pouvoir continuer</span>";
             };

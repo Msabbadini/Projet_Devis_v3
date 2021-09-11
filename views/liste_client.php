@@ -47,15 +47,7 @@ global $Clients;
                     </table>
                   <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">
         <div>
-            <p class="text-sm leading-5 text-blue-700">
-                Showing
-                <span class="font-medium">1</span>
-                to
-                <span class="font-medium">200</span>
-                of
-                <span class="font-medium">2000</span>
-                results
-            </p>
+
         </div>
             <div id='pagination'>
                 <?php 

@@ -156,4 +156,4 @@ global $References;
   </div>
 </div>
 
-
+<?php include '../src/assets/template.js'?>
