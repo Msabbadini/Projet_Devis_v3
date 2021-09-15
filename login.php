@@ -1,6 +1,9 @@
 <?php
 session_start();
-include('./src/entete.php');
+if(isset($_SESSION['connect'])){
+    header('location:index.php');
+};
+include('./src/Php/entete.php');
 ?>
  <div class="w-full flex flex-wrap">
 
@@ -41,6 +44,6 @@ include('./src/entete.php');
     <img class="object-cover w-full h-screen hidden md:block" src="src/assets/charpente_2.5.jpg">
 </div>
 </div>
-<script  src="src/ajax.login.js"></script>
+<script  src="src/Js/ajax.login.js"></script>
 
-<?php include('src/pied_page.php')?>
+<?php include('src/Php/pied_page.php')?>

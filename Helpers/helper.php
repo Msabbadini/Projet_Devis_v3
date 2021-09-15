@@ -1,20 +1,5 @@
 <?php
 
-// function Pagination($nombre_total,$categorie,$page=1){
-//     $limit=LIMIT;
-//     $last_page = ceil($nombre_total/$limit);
-//     $html='';
-//     for($i=1;$i<=$last_page;$i++){
-//         if($i==$page){
-//            $html.=' <a href="#"  class=" -ml-px relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">'.$i.'</a>';
-
-//         }else{ 
-//             $html.='<a href="#" data-categorie="'.htmlentities($categorie).'" data-pagenum="'.$i.'"  class="displayRecords -ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">'.$i.'</a>';
-//         }
-//     }
-//     return $html;
-// }
-//  trouver le style disabled
 function Pagination($nombre_total,$categorie,$page=1){
     $limit=LIMIT;
 

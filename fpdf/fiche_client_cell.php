@@ -3,7 +3,7 @@ require_once 'fpdf.php';
 
 class ClientCell extends FPDF{
 
-            function setClient($nom,$prenom){
+    function setClient($nom,$prenom){
                 $this->client=$nom.' '.$prenom;
             }
             // Pied de page
@@ -17,7 +17,7 @@ class ClientCell extends FPDF{
                 // Numéro de page
                 $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
             }
-            function VCell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false)
+    function VCell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false)
 {
     //Output a cell
     $k=$this->k;

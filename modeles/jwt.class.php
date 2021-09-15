@@ -1,16 +1,16 @@
 <?php
 define ('secret','gmb#Qh8H7!XqXRN#');
-/** 
-     * Génération JWT
-     * @param array $header Header du token
-     * @param array $payload Payload du token
-     * @param string $secret Clé secrète
-     * @param int $validity Durée de validité(en secondes)
-     * @return string Token
-     */ 
 
- class JWT{
-     private const HEADERS ='';
+class JWT{
+    /** 
+         * Génération JWT
+         * @param array $header Header du token
+         * @param array $payload Payload du token
+         * @param string $secret Clé secrète
+         * @param int $validity Durée de validité(en secondes)
+         * @return string Token
+         */ 
+    private const HEADERS ='';
 
      function __construct(){
         $this->HEADERS=['typ'=>'JWT','alg'=>'HS256'];

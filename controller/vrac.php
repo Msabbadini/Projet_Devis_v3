@@ -46,6 +46,8 @@ if(isset($_SESSION['connect']) && $obj3->VerifTokenValidity() == 'true'){
                         $ret=$ret[0];
                     }
                     echo json_encode([$ret,'token'=>$token]); 
+                }else{
+                    echo json_encode([$ret,'token'=>$token]); 
                 }
             }
     }else echo $ret;

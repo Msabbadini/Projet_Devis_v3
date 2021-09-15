@@ -95,8 +95,6 @@ $(document).ready(function(){
         console.log(pageNum);
         displayRecords(pageNum,categorie );  
 
-        // console.log(displayRecords(pageNum,categorie));
-        // displayRecords(pageNum,categorie );
     });
     // ******* Pagination tableau Client End   *******
     // ******* Barre de recherche *******
@@ -129,7 +127,9 @@ $(document).ready(function(){
                     type: 'POST',
                     url: ajax,
                     data: {action:'Supprimer',categorie:'clients',client:idClient},
+                    dataType:'JSON',
                     success: function(data){
+                        console.log(data)
                         $('#'+idClient).remove();
                         RefreshToken(data.token);
                     }
@@ -364,8 +364,6 @@ $(document).ready(function(){
                 var ref_qte_commande = $('#ref_qte_commande').val()
                 var ref_designation = $('#ref_designation').val()
                 var ref_prix_commande = parseFloat($('#ref_prix_commande').val())
-                // $('#contenu_devis').append("<tr id='article_"+id_article+"'><td>"+id_article+"</td> <td>"+ref_designation+"</td><td class='text-indigo-600 font-bold'>"+ref_qte_commande+"</td><td class=' ref_prix_commande text-indigo-600 font-bold'>"+ref_prix_commande+"</td><td><button type='button' data-refcommande='"+ref_prix_commande+"'  data-id_article='"+id_article+"' class='bg-indigo-500 text-white w-16 rounded-md remove_row'>X</button></td></tr>")
-                // $('#id_client').val(id_client)
                 $('<tr class="article_fixe"/>').loadTemplate($("#template_tab"), {
                     id_article: id_article,
                     ref_designation: ref_designation,
@@ -377,12 +375,11 @@ $(document).ready(function(){
                 var total = parseFloat($('#total_commande').val())
                 total += ref_prix_commande
                 $('#total_commande').val(total.toFixed(2))
-                console.log(total)
+                // console.log(total)
                 var ligne ={id_article:id_article,qte:ref_qte_commande,ref_prix:ref_prix_commande};
                 // //data.push(ligne)
                 data[id_article]=ligne;
-                // ajoutElem(data,{id_article:id_article,qte:ref_qte_commande,ref_prix:ref_prix_commande})
-                console.log(data)
+                console.log(data);
              });
              // ******** Function Insert Tableau Devis Toiture End   *******
              // ******** Function Remove Ligne Tableau Devis Toiture Start   *******
@@ -393,9 +390,6 @@ $(document).ready(function(){
                 var index=$(this).data('id_article');
                 data.splice(index,1);  
                 total -= montant
-                if(total == null){
-                    total=0;
-                }
                 $('#total_commande').val(total.toFixed(2))
                 $(this).closest('tr').remove()
              });
@@ -414,7 +408,7 @@ $(document).ready(function(){
                     dataType: 'JSON',
                     success: function(data){
                         console.log(data)
-                        for(var prop in data.ref){
+                        for(var prop in data.ref){  
                             $('#ref_'+prop).val(data.ref[prop]);
                         }
                         // quantite_m2*met_toiture/qte_fournisseur
@@ -428,6 +422,7 @@ $(document).ready(function(){
                         if(test !=''){
                         console.log(test)
                         test =data.ref['calcul_qte'].replace(/quantite_m2|met_toiture|met_toit|qte_fournisseur/gi,function(matched){return mapObj[matched]})
+                        console.log('test replace '+test);
                         result = math.evaluate(test)
                         console.log('test de la fonction :'+result)
                         var quantite_commande = Math.ceil(result)
@@ -534,6 +529,4 @@ $(document).ready(function(){
             }
         });
     });
-
-
 })

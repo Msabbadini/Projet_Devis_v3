@@ -167,16 +167,17 @@
     //*************************  FUNCTION MODIFIER CLIENT END   **************************
     
     //*************************  FUNCTION DELETE CLIENT START   **************************
-        function Supprimer(){         
+        function Supprimer(){ 
+            $status='';        
             if(isset($_POST['client'])){
                 $clientId = $_POST['client'];
                 $req = $this->getDatabase()->prepare('DELETE FROM '.$this->table_client.' WHERE id_client= ?');
                 $req->execute([$clientId]);
         
                 if($req){
-                    return 'success';
+                    return $status='success';
                 }else{
-                    return 'error';
+                    return $status='error';
                 }
             }
         }

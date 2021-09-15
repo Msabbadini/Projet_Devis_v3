@@ -1,6 +1,9 @@
 <?php
+// On définit une limite pour notre pagination avec une variable global
 define("LIMIT",5);
 require_once '../Helpers/helper.php';
+
+//Class ne pouvant être instanciée 
 abstract class DB{
     
     // Transmission des infos de notre BDD
@@ -9,7 +12,7 @@ abstract class DB{
     private const USER = 'root';
     private const PWD = '';
 
-    // nomination table
+    // nomination table pour rendre plus simple le changement de nom des tables dans les enfants de cette classe
 
     protected  $table_client;
     protected  $table_devis;
@@ -19,6 +22,7 @@ abstract class DB{
     protected  $table_login;
     protected  $table_tentative;
     
+    // construteur pour donner une valeur à nos variables
     function __construct(){
         $this->table_client = 'clients';
         $this->table_devis =   'devis';
@@ -40,7 +44,7 @@ abstract class DB{
         self::$database->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     }
 
-    // singleton
+    // singleton permet la connexion une seule fois a notre base de donnée
     protected function getDatabase()
         {
             if(self::$database === null){

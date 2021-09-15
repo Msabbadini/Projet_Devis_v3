@@ -86,8 +86,7 @@ global $References;
               </div>
               <div class="col-span-6 sm:col-span-2">
                 <label  class="block text-sm font-medium text-gray-700">Ref Fournisseur</label>
-                <input type="text" id='ref_ref_fournisseur' name="ref_fournisseur"  autocomplete="" class="mt-1 pl-2 bg-indigo-500 text-white font-bold focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                
+                <input type="text" id='ref_ref_fournisseur' name="ref_fournisseur"  autocomplete="" class="mt-1 pl-2 bg-indigo-500 text-white font-bold focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">         
               </div>
 
               <div class="col-span-2">
@@ -156,4 +155,4 @@ global $References;
   </div>
 </div>
 
-<?php include '../src/assets/template.js'?>
+<?php include '../src/Js/template.js'?>

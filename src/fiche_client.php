@@ -1,5 +1,4 @@
 <?php
-
 try{
     $db= new PDO('mysql:host=localhost;dbname=lionel','root','');
     $db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
@@ -8,6 +7,7 @@ try{
 }
 
 if(isset($_GET['client']) && $_GET['client'] != ''){
+
     require '../fpdf/fiche_client_cell.php';
     $id_client= htmlspecialchars($_GET['client']);
     $req = $db->prepare('SELECT * FROM clients WHERE id_client= ?');
