@@ -36,6 +36,7 @@ $obj = new Login();
     if(isset($_POST['deco']) && !empty($_POST['deco']) && $obj->VerifTokenValidity() == 'true'){
 
             $obj->decoLog();
+            echo 1;
     }
 
     if(isset($_POST['validToken']) && !empty($_POST['validToken'])){

@@ -26,6 +26,7 @@ if(isset($_SESSION['connect']) && $obj3->VerifTokenValidity() == 'true'){
         elseif($_POST['action'] == 'liste') $ret =  $obj->ListeInfo(true);
         elseif($_POST['action'] == 'chercher') $ret = $obj->Chercher();
         elseif($_POST['action'] == 'details') $ret = $obj->Details();
+        elseif($_POST['action'] == 'modification_statut') $ret = $obj->ModifierStatut();
            
         if(isset($_POST['pagination']) && $_POST['pagination'] == 'on' && is_array($ret)){
             $nombre=$obj->Nombre();

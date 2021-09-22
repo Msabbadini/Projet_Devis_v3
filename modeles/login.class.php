@@ -80,8 +80,7 @@ require_once 'jwt.class.php';
 
     public function VerifTokenValidity(){
         $headers = apache_request_headers();
-        // echo $_COOKIE['bear'];
-        // var_dump($headers);
+
         if(isset($headers['JWT-Token']) && !empty($headers['JWT-Token'])){
             if( $headers['JWT-Token'] !== $_COOKIE['bear']){
                 exit(json_encode(['error'=>'Token invalide']));

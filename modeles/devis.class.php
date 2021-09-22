@@ -6,12 +6,18 @@
     function __construct(){
         parent::__construct();
     } 
+    private function element($devis_num){
+        $req = $this->getDatabase()->prepare('SELECT * FROM '.$this->table_devis.' WHERE devis_num=?');
+        $req->execute([$devis_num]);
+        $data = $req->fetch();
+        return $data;
+    }
 
     public function Ajouter(){
         if(isset($_POST['montant']) && !empty($_POST['montant']) && isset($_POST['client']) && !empty($_POST['client']) && isset($_POST['details']) && !empty($_POST['details'])){
             $devis_date = date('d/m/Y');
             $req=$this->getDatabase()->prepare('INSERT INTO '.$this->table_devis.' (client_num,devis_date,devis_montant,type_devis,statut_devis) VALUES(?,?,?,?,?)'); 
-            $statut = $req->execute([$_POST['client'],$devis_date,$_POST['montant'],'devis','En attente']);
+            $statut = $req->execute([$_POST['client'],$devis_date,$_POST['montant'],'Devis','En attente']);
 
             if($statut){
                 $num_devis = $this->getDatabase()->lastInsertId();
@@ -37,7 +43,7 @@
         $id_ref= $_POST['id_ref'];
         $metrage_toiture = $_POST['metrage_toiture'];
         $req=$this->getDatabase()->prepare('SELECT * FROM '. $this->table_reference.' WHERE article_code = ?');
-        $req->excute([$id_ref]);
+        $req->execute([$id_ref]);
         $data=$req->fetchAll();
 
         // calcul data
@@ -139,6 +145,38 @@
             return $data;
         }
         return false;
+    }
+
+    public function ModifierStatut(){
+        if(isset($_POST['devis_num']) && is_numeric($_POST['devis_num']) && $_POST['devis_num'] > 0 && isset($_POST['statut'])){
+            $devis=$_POST['devis_num'];
+            $data =array("statut"=>0);
+            $statut =$_POST['statut'];
+            $type=$this->element($devis);
+            // var_dump($type);
+            if($type && is_array($type) && isset($type['type_devis']) && strtolower($type['type_devis'])=='devis' ){
+                // echo 'ok';
+                if($statut =='Valider'){
+                    $newType='Facture';
+                    $req= $this->getDatabase()->prepare('UPDATE '.$this->table_devis.' SET statut_devis = ?,type_devis=? WHERE devis_num= ?');
+                    $d=$req->execute([$statut,'Facture',$devis]);
+                }else{
+                    $newType='Devis';
+                    $req= $this->getDatabase()->prepare('UPDATE '.$this->table_devis.' SET statut_devis = ? WHERE devis_num= ?');
+                    $d=$req->execute([$statut,$devis]);
+                }
+                ob_start();
+                $r['type_devis']='Devis';
+                $r['statut_devis']=$statut;
+                $data['statut']=$d;
+                $r['devis_num']=$devis;
+                include ('../views/statut_devis.php');    
+                $data['html']=ob_get_contents();
+                ob_end_clean();
+                $data['type']=$newType;
+                return $data;
+            }
+        }
     }
  }
  $Devis = new Devis();

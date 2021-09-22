@@ -3,6 +3,7 @@ var adresse = 'http://localhost/testV4/src/fiche_client.php?client=';
 var ajax = 'controller/vrac.php';
 var securite = 'controller/securite.php';
 var modal_id= 'modal_id';
+// var token = $("#OwlToken").val(newToken);
 
     function displayRecords(pageNum,categorie ) {
         $('.loader').html('<img src="src/Infinity-loading.gif" alt="" width="24" height="24" >');
@@ -36,7 +37,9 @@ function ajoutElem(tab,elem){
     [].push.call(tab,elem)
 }
 function RefreshToken(newToken){
-     token = $("#OwlToken").val(newToken);
+    if(newToken && typeof newToken !='undefined'){
+        $("#OwlToken").val(newToken);
+    }
 }
 // tableau devis ( voir pour le faire en objet)
 var data=[];
@@ -139,7 +142,7 @@ $(document).ready(function(){
     // ******* Function Delete End      *******
     // ******* Function Update Start    *******
         $(document).on('click','.update',function(){
-//  faire sur référence
+
             var id= $(this).data('id'),
                 categorie=$(this).data('categorie');
                 $('#update_client').attr('data-id_client',id);
@@ -162,7 +165,6 @@ $(document).ready(function(){
                             }
                 }
             });
-
         });
     // ******* Function Update End      *******
     // ******* Function Update données Start    *******
@@ -202,27 +204,34 @@ $(document).ready(function(){
     // ******* Function Info Start      *******
         $(document).on('click','.info',function(){
             var idClient = $(this).data('id');
-            $('.page-content').load('views/info.php');
-            console.log(idClient);
             $.ajax({
-                type: 'POST',
-                url: 'views/info_client.php',
-                data: {action:'chercher',categorie:'clients',info_client_2:idClient},
+                type:'GET',
+                url:'views/info.php',
                 success:function(data){
-                    // console.log(data);
-                    $('#info_client').html(data);
-                    RefreshToken(data.token);
+                    $('.page-content').html(data);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'views/info_client.php',
+                        data: {action:'chercher',categorie:'clients',info_client_2:idClient},
+                        success:function(data){
+                            // console.log(data);
+                            $('#info_client').html(data);
+                            RefreshToken(data.token);
+                            $.ajax({
+                                type: 'POST',
+                                url: 'views/info_devis_client.php',
+                                data:{action:'chercher',categorie:'devis',info_client:idClient},
+                                success: function(data){
+                                    console.log('ok info');
+                                    $('#client_devis').html(data);
+                                }
+                            });
+                        }
+                    });
                 }
-            });
-            $.ajax({
-                type: 'POST',
-                url: 'views/info_devis_client.php',
-                data:{action:'chercher',categorie:'devis',info_client:idClient},
-                success: function(data){
-                    console.log('ok info');
-                    $('#client_devis').html(data);
-                }
-            });
+            })
+            console.log(idClient);
+
         })
     // ******* Function Info End        *******
     // ******* Function Ajout Start     *******
@@ -247,11 +256,11 @@ $(document).ready(function(){
                 }
                     $('#html').html(data[0].msg);
                     console.log(data[0].status)
+                    RefreshToken(data.token);
                 },
                 complete: function(){
                     console.log('c\'est fini')
                     $('form')[0].reset()
-                    RefreshToken(data.token);
                 }
                 });
             });
@@ -309,6 +318,35 @@ $(document).ready(function(){
                     }   
                 })
             }
+        });
+
+        $(document).on('change','.statut_devis',function(){
+            var element =$(this);
+            var devis_num = element.data('id');
+            var statut = element.val();
+            $.ajax({
+                type:'POST',
+                url:ajax,
+                data:{devis_num:devis_num,statut:statut,action:'modification_statut',categorie:'devis'},
+                dataType:'JSON',
+                success:function(data){
+                    // data=data[0];
+                    if(data.token){
+                        RefreshToken(data.token);
+                    }
+                    if(data[0].statut ){
+                        if(data[0].type =='Facture'){
+                            var statut_html ='';
+                        }else{
+                            var statut_html=data[0].html;
+                        }
+                        $('#type_devis-'+devis_num).html(data[0].type);
+                        $('#statut_devis_actuel-'+devis_num).html(statut_html);
+                    }else{
+                        alert('Une erreur est survenue');
+                    }
+                }
+            });
         });
      // ******** Function Insert Client Devis Toiture *******
         // """[Insert Client Devis Toiture]
@@ -473,7 +511,7 @@ $(document).ready(function(){
                     data:{action:'details',categorie:'devis',devis_num:devis_num},
                     success: function(data){
                         $('.page-content').html(data)
-                        $(this).data('id_client').attr(client_num);
+                        $(this).data('id_client',client_num);
                     }
                 });
              });
